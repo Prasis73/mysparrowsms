@@ -15,7 +15,6 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-// v2_f5RKamGWtlI8w767gNp9Xk2OKK8.5NuE
 class _HomePageState extends State<HomePage> {
   sendSms() async {
     final response = await http.get(
