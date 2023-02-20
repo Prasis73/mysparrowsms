@@ -332,7 +332,9 @@ class _HomePageState extends State<HomePage> {
                       }
                     },
               child: isLoading
-                  ? const Center(child: CircularProgressIndicator())
+                  ? const SizedBox(
+                    height: 20,width: 20,
+                    child: CircularProgressIndicator(color: Colors.white,))
                   : const Text("Send Sms"))
         ]),
       ),
