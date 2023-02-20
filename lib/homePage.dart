@@ -117,16 +117,22 @@ class _HomePageState extends State<HomePage> {
                           ),
                           IconButton(
                               onPressed: () {
-                                GetStorage().write('API', apiController.text).then((value) {
-                                  apiController.clear();
+                                GetStorage().write('API', apiController.text);
+                                print(LoginGetStorage.getAPI());
+                                setState(() {
+                                  
                                 });
-                                
                                 Navigator.pop(context);
                               },
                               icon: Icon(Icons.done))
                         ],
                       ),
                     );
+                  }).then((value) {
+                    apiController.clear();
+                    setState(() {
+                      
+                    });
                   });
             },
           )
@@ -299,9 +305,11 @@ class _HomePageState extends State<HomePage> {
                                   IconButton(
                                       onPressed: () {
                                         GetStorage()
-                                            .write('API', apiController.text).then((value) {
-                                              apiController.clear();
+                                            .write('API', apiController.text);
+                                            setState(() {
+                                              
                                             });
+                                           
                                             
                                         Navigator.pop(context);
                                       },
@@ -309,6 +317,11 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               ),
                             );
+                          }).then((value) {
+                            apiController.clear();
+                            setState(() {
+                              
+                            });
                           });
                     }
                   : () {
