@@ -39,6 +39,7 @@ dependencies:
   http: ^0.13.5
   google_fonts: ^2.1.0
   loading_animation_widget: ^1.2.0+2
+  connectivity_plus: ^3.0.3
 
 
 dev_dependencies:

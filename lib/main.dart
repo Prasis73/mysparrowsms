@@ -22,7 +22,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        textSelectionTheme: TextSelectionThemeData(
+        textSelectionTheme: const TextSelectionThemeData(
           cursorColor: Colors.black,
           selectionColor: Colors.white12,
           selectionHandleColor: Colors.black,
@@ -33,7 +33,7 @@ class _MyAppState extends State<MyApp> {
       ),
       title: 'mysparrowsms',
       debugShowCheckedModeBanner: false,
-      home: Splash(),
+      home: const Splash(),
     );
   }
 }

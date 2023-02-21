@@ -20,7 +20,7 @@ class Helper {
                   begin: AlignmentDirectional.topStart,
                   end: AlignmentDirectional.bottomEnd,
                 ),
-                borderRadius: BorderRadius.all(Radius.circular(10)),
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
                 border: Border.all(
                   width: 1.5,
                   color: Colors.white.withOpacity(0.8),
@@ -36,7 +36,7 @@ class Helper {
                       child: Text(message,
                           textAlign: TextAlign.center,
                           style: GoogleFonts.comfortaa(
-                            textStyle: TextStyle(
+                            textStyle: const TextStyle(
                                 fontSize: 40,
                                 fontWeight: FontWeight.w900,
                                 color: Color.fromARGB(255, 37, 0, 0)),
