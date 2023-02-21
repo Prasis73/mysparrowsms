@@ -164,7 +164,7 @@ class _HomePageState extends State<HomePage> {
                     child: Stack(
                       children: [
                         SizedBox(
-                            height: 570,
+                            height: MediaQuery.of(context).size.height,
                             child: Image.asset(
                               "./assets/sms.png",
                               fit: BoxFit.cover,
@@ -189,7 +189,7 @@ class _HomePageState extends State<HomePage> {
                                     color: Colors.white.withOpacity(0.1),
                                   ),
                                 ),
-                                height: 570,
+                                height: MediaQuery.of(context).size.height,
                                 width: MediaQuery.of(context).size.width,
                                 child: Column(
                                   children: [
