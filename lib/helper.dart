@@ -1,42 +1,55 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class Helper{
-  static DialogueHelper(BuildContext context,message){
+class Helper {
+  static DialogueHelper(BuildContext context, message) {
     showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            contentPadding: const EdgeInsets.all(30),
-            backgroundColor: Theme.of(context).secondaryHeaderColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30.0),
-              side: BorderSide(color: Theme.of(context).primaryColor),
-            ),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                   message,
-                    style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontFamily: "IMPACT",
-                        fontSize: 28),
-                    textAlign: TextAlign.left,
-                  ),
+            backgroundColor: Colors.transparent,
+            content: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.white.withOpacity(0.8),
+                    Colors.white.withOpacity(0.7),
+                  ],
+                  begin: AlignmentDirectional.topStart,
+                  end: AlignmentDirectional.bottomEnd,
                 ),
-                const SizedBox(
-                  height: 20,
+                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                border: Border.all(
+                  width: 1.5,
+                  color: Colors.white.withOpacity(0.8),
                 ),
-                IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.done))
-                
-              ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(38.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(message,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.comfortaa(
+                            textStyle: const TextStyle(
+                                fontSize: 40,
+                                fontWeight: FontWeight.w900,
+                                color: Color.fromARGB(255, 37, 0, 0)),
+                          )),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
+              ),
             ),
           );
         });
-    
   }
 }
