@@ -1,8 +1,13 @@
 // ignore_for_file: file_names
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:mysparrowsms/getStorage.dart';
 import 'dart:convert';
 
@@ -33,8 +38,8 @@ class _HomePageState extends State<HomePage> {
     if (value["success"] = true) {
       Helper.DialogueHelper(context, value["message"]);
       messageController.clear();
-      toController.clear();
-      fromController.clear();
+      // toController.clear();
+      // fromController.clear();
       setState(() {
         isLoading = false;
       });
@@ -52,291 +57,672 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Send Sms"),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      contentPadding: const EdgeInsets.all(30),
-                      backgroundColor: Theme.of(context).secondaryHeaderColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                        side: BorderSide(color: Theme.of(context).primaryColor),
-                      ),
-                      content: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              "Add Custom API KEY here",
-                              style: TextStyle(
-                                  color: Theme.of(context).primaryColor,
-                                  fontFamily: "IMPACT",
-                                  fontSize: 28),
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 30, right: 40),
-                            child: SizedBox(
-                              width: 165,
-                              child: TextFormField(
-                                controller: apiController,
-                                textAlign: TextAlign.start,
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: Theme.of(context).primaryColor),
-                                decoration: InputDecoration(
-                                  enabledBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Theme.of(context).primaryColor),
-                                  ),
-                                  focusedBorder: UnderlineInputBorder(
-                                    borderSide: BorderSide(
-                                        color: Theme.of(context).primaryColor),
-                                  ),
-                                  fillColor: Theme.of(context).primaryColor,
-                                  hintText: "API KEY",
-                                  hintStyle: TextStyle(
-                                      color: Theme.of(context)
-                                          .primaryColor
-                                          .withOpacity(0.5)),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+              colors: [
+                Color(0xFFFFCD85),
+                Color(0xFFFFECAF),
+              ],
+              begin: FractionalOffset(0.0, 0.0),
+              end: FractionalOffset(1.0, 1.0),
+              stops: [0.0, 1.0],
+              tileMode: TileMode.clamp),
+        ),
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                InkWell(
+                  onDoubleTap: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            backgroundColor: Colors.transparent,
+                            content: Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Colors.white.withOpacity(0.8),
+                                    Colors.white.withOpacity(0.7),
+                                  ],
+                                  begin: AlignmentDirectional.topStart,
+                                  end: AlignmentDirectional.bottomEnd,
+                                ),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10)),
+                                border: Border.all(
+                                  width: 1.5,
+                                  color: Colors.white.withOpacity(0.8),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(38.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text("Developer",
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.comfortaa(
+                                            textStyle: TextStyle(
+                                                fontSize: 40,
+                                                fontWeight: FontWeight.w900,
+                                                color: Color.fromARGB(
+                                                    255, 37, 0, 0)),
+                                          )),
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    Center(
+                                      child: Text("Roshan Sah",
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.comfortaa(
+                                            textStyle: TextStyle(
+                                                fontSize: 24,
+                                                fontWeight: FontWeight.w900,
+                                                color: Color.fromARGB(
+                                                    255, 37, 0, 0)),
+                                          )),
+                                    ),
+                                    SizedBox(
+                                      height: 5,
+                                    ),
+                                    Center(
+                                      child: Text("Prasis Rijal",
+                                          textAlign: TextAlign.center,
+                                          style: GoogleFonts.comfortaa(
+                                            textStyle: TextStyle(
+                                                fontSize: 24,
+                                                fontWeight: FontWeight.w900,
+                                                color: Color.fromARGB(
+                                                    255, 37, 0, 0)),
+                                          )),
+                                    ),
+                                    SizedBox(
+                                      height: 10,
+                                    )
+                                  ],
                                 ),
                               ),
                             ),
-                          ),
-                          IconButton(
-                              onPressed: () {
-                                GetStorage().write('API', apiController.text);
-                                print(LoginGetStorage.getAPI());
-                                setState(() {
-                                  
-                                });
-                                Navigator.pop(context);
-                              },
-                              icon: Icon(Icons.done))
-                        ],
-                      ),
-                    );
-                  }).then((value) {
-                    apiController.clear();
-                    setState(() {
-                      
+                          );
+                        }).then((value) {
+                      setState(() {});
                     });
-                  });
-            },
-          )
-        ],
-      ),
-      body: Form(
-        key: _formKey,
-        child: Column(children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 30, right: 40),
-            child: SizedBox(
-              width: 165,
-              child: TextFormField(
-                controller: fromController,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Required';
-                  }
-                  return null;
-                },
-                textAlign: TextAlign.start,
-                style: TextStyle(
-                    fontSize: 18, color: Theme.of(context).primaryColor),
-                decoration: InputDecoration(
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Theme.of(context).primaryColor),
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Theme.of(context).primaryColor),
-                  ),
-                  fillColor: Theme.of(context).primaryColor,
-                  hintText: "From (Name)",
-                  hintStyle: TextStyle(
-                      color: Theme.of(context).primaryColor.withOpacity(0.5)),
+                  },
+                  child: SizedBox(
+                      height: 300,
+                      width: MediaQuery.of(context).size.width,
+                      child: Image.asset(
+                        "./assets/sms.png",
+                        fit: BoxFit.cover,
+                      )),
                 ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, right: 40),
-            child: SizedBox(
-                width: 165,
-                child: TextFormField(
-                  controller: toController,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Required';
-                    }
-                    return null;
-                  },
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                      fontSize: 18, color: Theme.of(context).primaryColor),
-                      keyboardType:TextInputType.phone ,
-                  decoration: InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Theme.of(context).primaryColor),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Theme.of(context).primaryColor),
-                    ),
-                    fillColor: Theme.of(context).primaryColor,
-                    hintText: "Phone NUmber",
-                    hintStyle: TextStyle(
-                        color: Theme.of(context).primaryColor.withOpacity(0.5)),
-                  ),
-                )),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, right: 40),
-            child: SizedBox(
-                width: 165,
-                child: TextFormField(
-                  controller: messageController,
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Required';
-                    }
-                    return null;
-                  },
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                      fontSize: 18, color: Theme.of(context).primaryColor),
-                  decoration: InputDecoration(
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Theme.of(context).primaryColor),
-                    ),
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Theme.of(context).primaryColor),
-                    ),
-                    fillColor: Theme.of(context).primaryColor,
-                    hintText: "Write a Message",
-                    hintStyle: TextStyle(
-                        color: Theme.of(context).primaryColor.withOpacity(0.5)),
-                  ),
-                )),
-          ),
-          ElevatedButton(
-              onPressed: LoginGetStorage.getAPI().toString() == ""
-                  ? () {
+                Positioned(
+                  right: 30,
+                  top: 50,
+                  child: IconButton(
+                    onPressed: () {
                       showDialog(
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              contentPadding: const EdgeInsets.all(30),
-                              backgroundColor:
-                                  Theme.of(context).secondaryHeaderColor,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                                side: BorderSide(
-                                    color: Theme.of(context).primaryColor),
-                              ),
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      "Add Custom API KEY Here First",
-                                      style: TextStyle(
-                                          color: Theme.of(context).primaryColor,
-                                          fontFamily: "IMPACT",
-                                          fontSize: 28),
-                                      textAlign: TextAlign.left,
-                                    ),
+                              backgroundColor: Colors.transparent,
+                              content: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.white.withOpacity(0.8),
+                                      Colors.white.withOpacity(0.7),
+                                    ],
+                                    begin: AlignmentDirectional.topStart,
+                                    end: AlignmentDirectional.bottomEnd,
                                   ),
-                                  const SizedBox(
-                                    height: 20,
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(10)),
+                                  border: Border.all(
+                                    width: 1.5,
+                                    color: Colors.white.withOpacity(0.8),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 30, right: 40),
-                                    child: SizedBox(
-                                      width: 165,
-                                      child: TextFormField(
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(30.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Text(
+                                            "Add Custom API KEY provided by sparrow sms",
+                                            textAlign: TextAlign.left,
+                                            style: GoogleFonts.comfortaa(
+                                              textStyle: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w900,
+                                                  color: Color.fromARGB(
+                                                      255, 37, 0, 0)),
+                                            )),
+                                      ),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      TextFormField(
                                         controller: apiController,
                                         textAlign: TextAlign.start,
-                                        style: TextStyle(
-                                            fontSize: 18,
-                                            color:
-                                                Theme.of(context).primaryColor),
+                                        style: GoogleFonts.comfortaa(
+                                          textStyle: TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w900,
+                                              color: Color.fromARGB(
+                                                  255, 37, 0, 0)),
+                                        ),
                                         decoration: InputDecoration(
                                           enabledBorder: UnderlineInputBorder(
-                                            borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
+                                            borderSide:
+                                                BorderSide(color: Colors.black),
                                           ),
                                           focusedBorder: UnderlineInputBorder(
                                             borderSide: BorderSide(
-                                                color: Theme.of(context)
-                                                    .primaryColor),
+                                              color: Colors.black,
+                                            ),
                                           ),
-                                          fillColor:
-                                              Theme.of(context).primaryColor,
-                                          hintText: "API KEY",
-                                          hintStyle: TextStyle(
-                                              color: Theme.of(context)
-                                                  .primaryColor
-                                                  .withOpacity(0.5)),
+                                          fillColor: Colors.black,
+                                          hintText: "Token",
+                                          hintStyle: GoogleFonts.comfortaa(
+                                              textStyle: TextStyle(
+                                                  color: Colors.black
+                                                      .withOpacity(0.5))),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 19,
+                                      ),
+                                      IconButton(
+                                          onPressed: () {
+                                            GetStorage().write(
+                                                'API', apiController.text);
+                                            print(LoginGetStorage.getAPI());
+                                            setState(() {});
+                                            Navigator.pop(context);
+                                          },
+                                          icon: Icon(Icons.done_rounded))
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).then((value) {
+                        apiController.clear();
+                        setState(() {});
+                      });
+                    },
+                    icon: Icon(
+                      Icons.api,
+                      color: Color(0xFFFFECAF),
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Stack(
+              children: [
+                SizedBox(
+                    height: MediaQuery.of(context).size.height - 300,
+                    child: Image.asset(
+                      "./assets/sms.png",
+                      fit: BoxFit.cover,
+                    )),
+                ClipRRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 15, sigmaY: 20),
+                    child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.white.withOpacity(0.2),
+                              Colors.white.withOpacity(0.4),
+                            ],
+                            begin: AlignmentDirectional.topStart,
+                            end: AlignmentDirectional.bottomEnd,
+                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          border: Border.all(
+                            width: 1.5,
+                            color: Colors.white.withOpacity(0.1),
+                          ),
+                        ),
+                        height: MediaQuery.of(context).size.height - 300,
+                        width: MediaQuery.of(context).size.width,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 40,
+                              ),
+                              Center(
+                                  child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text("Sparrow sms",
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.comfortaa(
+                                      textStyle: TextStyle(
+                                          fontSize: 40,
+                                          fontWeight: FontWeight.w900,
+                                          color: Color.fromARGB(255, 37, 0, 0)),
+                                    )),
+                              )),
+                              Center(
+                                  child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                    "Send message using sparrow message api",
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.comfortaa(
+                                      textStyle: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.normal,
+                                          color: Color.fromARGB(255, 37, 0, 0)),
+                                    )),
+                              )),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              ClipRRect(
+                                child: BackdropFilter(
+                                  filter:
+                                      ImageFilter.blur(sigmaX: 15, sigmaY: 20),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Colors.white.withOpacity(0.2),
+                                          Colors.white.withOpacity(0.4),
+                                        ],
+                                        begin: AlignmentDirectional.topStart,
+                                        end: AlignmentDirectional.bottomEnd,
+                                      ),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(10)),
+                                      border: Border.all(
+                                        width: 1.5,
+                                        color: Colors.white.withOpacity(0.5),
+                                      ),
+                                    ),
+                                    height: 400,
+                                    width:
+                                        MediaQuery.of(context).size.width - 50,
+                                    child: Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 40, vertical: 19),
+                                        child: Form(
+                                          key: _formKey,
+                                          child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                TextFormField(
+                                                  controller: fromController,
+                                                  validator: (value) {
+                                                    if (value!.isEmpty) {
+                                                      return 'Required';
+                                                    }
+                                                    return null;
+                                                  },
+                                                  textAlign: TextAlign.start,
+                                                  style: GoogleFonts.comfortaa(
+                                                    textStyle: TextStyle(
+                                                        fontSize: 18,
+                                                        color: Colors.black),
+                                                  ),
+                                                  maxLength: 50,
+                                                  decoration: InputDecoration(
+                                                    counterText: "",
+                                                    enabledBorder:
+                                                        UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: Colors.black),
+                                                    ),
+                                                    focusedBorder:
+                                                        UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: Colors.black),
+                                                    ),
+                                                    fillColor: Colors.black,
+                                                    prefixIconColor:
+                                                        Colors.black,
+                                                    prefixIcon:
+                                                        Icon(Icons.contacts),
+                                                    labelText: 'From',
+                                                    labelStyle:
+                                                        GoogleFonts.comfortaa(
+                                                      textStyle: TextStyle(
+                                                          color: Colors.black),
+                                                    ),
+                                                    hintText: "Name",
+                                                    focusColor: Colors.black,
+                                                    hintStyle:
+                                                        GoogleFonts.comfortaa(
+                                                      textStyle: TextStyle(
+                                                          color: Colors.black
+                                                              .withOpacity(
+                                                                  0.5)),
+                                                    ),
+                                                  ),
+                                                ),
+                                                TextFormField(
+                                                  maxLength: 10,
+                                                  inputFormatters: <
+                                                      TextInputFormatter>[
+                                                    // for below version 2 use this
+                                                    FilteringTextInputFormatter
+                                                        .allow(
+                                                            RegExp(r'[0-9]')),
+                                                    // for version 2 and greater youcan also use this
+                                                    FilteringTextInputFormatter
+                                                        .digitsOnly
+                                                  ],
+                                                  controller: toController,
+                                                  validator: (value) {
+                                                    if (value!.isEmpty) {
+                                                      return 'Required';
+                                                    }
+                                                    return null;
+                                                  },
+                                                  textAlign: TextAlign.start,
+                                                  style: GoogleFonts.comfortaa(
+                                                    textStyle: TextStyle(
+                                                      fontSize: 18,
+                                                      color: Colors.black,
+                                                    ),
+                                                  ),
+                                                  keyboardType:
+                                                      TextInputType.phone,
+                                                  decoration: InputDecoration(
+                                                    enabledBorder:
+                                                        UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: Colors.black),
+                                                    ),
+                                                    counterText: "",
+                                                    focusedBorder:
+                                                        UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: Colors.black),
+                                                    ),
+                                                    fillColor: Colors.black,
+                                                    labelText: 'To',
+                                                    labelStyle:
+                                                        GoogleFonts.comfortaa(
+                                                      textStyle:
+                                                          GoogleFonts.comfortaa(
+                                                        textStyle: TextStyle(
+                                                            color:
+                                                                Colors.black),
+                                                      ),
+                                                    ),
+                                                    hintText: "Phone Number",
+                                                    prefixIconColor:
+                                                        Colors.black,
+                                                    prefixIcon:
+                                                        Icon(Icons.phone),
+                                                    hintStyle:
+                                                        GoogleFonts.comfortaa(
+                                                      textStyle: TextStyle(
+                                                          color: Colors.black
+                                                              .withOpacity(
+                                                                  0.5)),
+                                                    ),
+                                                  ),
+                                                ),
+                                                TextFormField(
+                                                  controller: messageController,
+                                                  validator: (value) {
+                                                    if (value!.isEmpty) {
+                                                      return 'Required';
+                                                    }
+                                                    return null;
+                                                  },
+                                                  textAlign: TextAlign.start,
+                                                  style: GoogleFonts.comfortaa(
+                                                    textStyle: TextStyle(
+                                                        fontSize: 18,
+                                                        color: Colors.black),
+                                                  ),
+                                                  maxLength: 500,
+                                                  decoration: InputDecoration(
+                                                    counterText: "",
+                                                    enabledBorder:
+                                                        UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: Colors.black),
+                                                    ),
+                                                    focusedBorder:
+                                                        UnderlineInputBorder(
+                                                      borderSide: BorderSide(
+                                                          color: Colors.black),
+                                                    ),
+                                                    fillColor: Colors.black,
+                                                    labelText: 'SMS',
+                                                    labelStyle: TextStyle(
+                                                        color: Colors.black),
+                                                    hintText: "Message",
+                                                    prefixIconColor:
+                                                        Colors.black,
+                                                    prefixIcon: Icon(Icons.sms),
+                                                    hintStyle:
+                                                        GoogleFonts.comfortaa(
+                                                      textStyle: TextStyle(
+                                                        color: Colors.black
+                                                            .withOpacity(0.5),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  height: 20,
+                                                ),
+                                                InkWell(
+                                                    onTap: LoginGetStorage
+                                                                    .getAPI()
+                                                                .toString() ==
+                                                            ""
+                                                        ? () {
+                                                            showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder:
+                                                                    (BuildContext
+                                                                        context) {
+                                                                  return AlertDialog(
+                                                                    backgroundColor:
+                                                                        Colors
+                                                                            .transparent,
+                                                                    content:
+                                                                        Container(
+                                                                      decoration:
+                                                                          BoxDecoration(
+                                                                        gradient:
+                                                                            LinearGradient(
+                                                                          colors: [
+                                                                            Colors.white.withOpacity(0.8),
+                                                                            Colors.white.withOpacity(0.7),
+                                                                          ],
+                                                                          begin:
+                                                                              AlignmentDirectional.topStart,
+                                                                          end: AlignmentDirectional
+                                                                              .bottomEnd,
+                                                                        ),
+                                                                        borderRadius:
+                                                                            BorderRadius.all(Radius.circular(10)),
+                                                                        border:
+                                                                            Border.all(
+                                                                          width:
+                                                                              1.5,
+                                                                          color: Colors
+                                                                              .white
+                                                                              .withOpacity(0.8),
+                                                                        ),
+                                                                      ),
+                                                                      child:
+                                                                          Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.all(30.0),
+                                                                        child:
+                                                                            Column(
+                                                                          mainAxisSize:
+                                                                              MainAxisSize.min,
+                                                                          children: [
+                                                                            Align(
+                                                                              alignment: Alignment.topLeft,
+                                                                              child: Text("Add Custom API KEY provided by sparrow sms",
+                                                                                  textAlign: TextAlign.left,
+                                                                                  style: GoogleFonts.comfortaa(
+                                                                                    textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: Color.fromARGB(255, 37, 0, 0)),
+                                                                                  )),
+                                                                            ),
+                                                                            const SizedBox(
+                                                                              height: 20,
+                                                                            ),
+                                                                            TextFormField(
+                                                                              controller: apiController,
+                                                                              textAlign: TextAlign.start,
+                                                                              style: GoogleFonts.comfortaa(
+                                                                                textStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: Color.fromARGB(255, 37, 0, 0)),
+                                                                              ),
+                                                                              decoration: InputDecoration(
+                                                                                enabledBorder: UnderlineInputBorder(
+                                                                                  borderSide: BorderSide(color: Colors.black),
+                                                                                ),
+                                                                                focusedBorder: UnderlineInputBorder(
+                                                                                  borderSide: BorderSide(
+                                                                                    color: Colors.black,
+                                                                                  ),
+                                                                                ),
+                                                                                fillColor: Colors.black,
+                                                                                hintText: "Token",
+                                                                                hintStyle: GoogleFonts.comfortaa(textStyle: TextStyle(color: Colors.black.withOpacity(0.5))),
+                                                                              ),
+                                                                            ),
+                                                                            SizedBox(
+                                                                              height: 19,
+                                                                            ),
+                                                                            IconButton(
+                                                                                onPressed: () {
+                                                                                  GetStorage().write('API', apiController.text);
+                                                                                  print(LoginGetStorage.getAPI());
+                                                                                  setState(() {});
+                                                                                  Navigator.pop(context);
+                                                                                },
+                                                                                icon: Icon(Icons.done_rounded))
+                                                                          ],
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  );
+                                                                }).then((value) {
+                                                              apiController
+                                                                  .clear();
+                                                              setState(() {});
+                                                            });
+                                                          }
+                                                        : () {
+                                                            if (_formKey
+                                                                .currentState!
+                                                                .validate()) {
+                                                              setState(() {
+                                                                isLoading =
+                                                                    true;
+                                                              });
+                                                              sendSms();
+                                                            }
+                                                          },
+                                                    child: ClipRRect(
+                                                        child: BackdropFilter(
+                                                            filter: ImageFilter
+                                                                .blur(
+                                                                    sigmaX: 15,
+                                                                    sigmaY: 20),
+                                                            child: Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                gradient:
+                                                                    LinearGradient(
+                                                                  colors: [
+                                                                    Colors.white
+                                                                        .withOpacity(
+                                                                            0.8),
+                                                                    Colors.white
+                                                                        .withOpacity(
+                                                                            0.7),
+                                                                  ],
+                                                                  begin: AlignmentDirectional
+                                                                      .topStart,
+                                                                  end: AlignmentDirectional
+                                                                      .bottomEnd,
+                                                                ),
+                                                                borderRadius: BorderRadius
+                                                                    .all(Radius
+                                                                        .circular(
+                                                                            10)),
+                                                                border:
+                                                                    Border.all(
+                                                                  width: 1.5,
+                                                                  color: Colors
+                                                                      .white
+                                                                      .withOpacity(
+                                                                          0.5),
+                                                                ),
+                                                              ),
+                                                              height: 50,
+                                                              width: 150,
+                                                              child: Center(
+                                                                child: isLoading
+                                                                    ? LoadingAnimationWidget
+                                                                        .hexagonDots(
+                                                                        color: Colors
+                                                                            .black
+                                                                            .withOpacity(0.7),
+                                                                        size:
+                                                                            30,
+                                                                      )
+                                                                    : Text(
+                                                                        "Send SMS",
+                                                                        textAlign:
+                                                                            TextAlign
+                                                                                .center,
+                                                                        style: GoogleFonts
+                                                                            .comfortaa(
+                                                                          textStyle: TextStyle(
+                                                                              fontSize: 16,
+                                                                              fontWeight: FontWeight.w900,
+                                                                              color: Color.fromARGB(255, 37, 0, 0)),
+                                                                        )),
+                                                              ),
+                                                            )))),
+                                              ]),
                                         ),
                                       ),
                                     ),
                                   ),
-                                  IconButton(
-                                      onPressed: () {
-                                        GetStorage()
-                                            .write('API', apiController.text);
-                                            setState(() {
-                                              
-                                            });
-                                           
-                                            
-                                        Navigator.pop(context);
-                                      },
-                                      icon: Icon(Icons.done))
-                                ],
+                                ),
                               ),
-                            );
-                          }).then((value) {
-                            apiController.clear();
-                            setState(() {
-                              
-                            });
-                          });
-                    }
-                  : () {
-                      if (_formKey.currentState!.validate()) {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        sendSms();
-                      }
-                    },
-              child: isLoading
-                  ? const SizedBox(
-                    height: 20,width: 20,
-                    child: CircularProgressIndicator(color: Colors.white,))
-                  : const Text("Send Sms"))
-        ]),
+                              SizedBox(
+                                height: 50,
+                              )
+                            ],
+                          ),
+                        )),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
