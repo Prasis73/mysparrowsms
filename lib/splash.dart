@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mysparrowsms/Onboard.dart';
 
+import 'getStorage.dart';
 import 'homePage.dart';
 
 class Splash extends StatefulWidget {
@@ -10,17 +12,21 @@ class Splash extends StatefulWidget {
 }
 
 class _SplashState extends State<Splash> {
-  _navigatetologin() async {
+  _navigateto() async {
     await Future.delayed(const Duration(seconds: 1), () {});
-
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const HomePage()));
+    if (LoginGetStorage.getOnboard() == false) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const HomePage()));
+    } else {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const Onboard()));
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    _navigatetologin();
+    _navigateto();
   }
 
   @override

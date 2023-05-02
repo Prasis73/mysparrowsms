@@ -8,6 +8,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:mysparrowsms/documentationPage.dart';
 import 'package:mysparrowsms/getStorage.dart';
 import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -52,6 +53,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   final _formKey = GlobalKey<FormState>();
+  final _formKey1 = GlobalKey<FormState>();
   TextEditingController fromController = TextEditingController();
   TextEditingController toController = TextEditingController();
   TextEditingController messageController = TextEditingController();
@@ -164,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                     child: Stack(
                       children: [
                         SizedBox(
-                            height: 570,
+                            height: MediaQuery.of(context).size.height,
                             child: Image.asset(
                               "./assets/sms.png",
                               fit: BoxFit.cover,
@@ -189,7 +191,7 @@ class _HomePageState extends State<HomePage> {
                                     color: Colors.white.withOpacity(0.1),
                                   ),
                                 ),
-                                height: 570,
+                                height: MediaQuery.of(context).size.height,
                                 width: MediaQuery.of(context).size.width,
                                 child: Column(
                                   children: [
@@ -493,76 +495,89 @@ class _HomePageState extends State<HomePage> {
                                                                       builder:
                                                                           (BuildContext
                                                                               context) {
-                                                                        return AlertDialog(
-                                                                          backgroundColor:
-                                                                              Colors.transparent,
-                                                                          content:
-                                                                              Container(
-                                                                            decoration:
-                                                                                BoxDecoration(
-                                                                              gradient: LinearGradient(
-                                                                                colors: [
-                                                                                  Colors.white.withOpacity(0.8),
-                                                                                  Colors.white.withOpacity(0.7),
-                                                                                ],
-                                                                                begin: AlignmentDirectional.topStart,
-                                                                                end: AlignmentDirectional.bottomEnd,
+                                                                        return Form(
+                                                                          key:
+                                                                              _formKey1,
+                                                                          child:
+                                                                              AlertDialog(
+                                                                            backgroundColor:
+                                                                                Colors.transparent,
+                                                                            content:
+                                                                                Container(
+                                                                              decoration: BoxDecoration(
+                                                                                gradient: LinearGradient(
+                                                                                  colors: [
+                                                                                    Colors.white.withOpacity(0.8),
+                                                                                    Colors.white.withOpacity(0.7),
+                                                                                  ],
+                                                                                  begin: AlignmentDirectional.topStart,
+                                                                                  end: AlignmentDirectional.bottomEnd,
+                                                                                ),
+                                                                                borderRadius: const BorderRadius.all(Radius.circular(10)),
+                                                                                border: Border.all(
+                                                                                  width: 1.5,
+                                                                                  color: Colors.white.withOpacity(0.8),
+                                                                                ),
                                                                               ),
-                                                                              borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                                                              border: Border.all(
-                                                                                width: 1.5,
-                                                                                color: Colors.white.withOpacity(0.8),
-                                                                              ),
-                                                                            ),
-                                                                            child:
-                                                                                Padding(
-                                                                              padding: const EdgeInsets.all(30.0),
-                                                                              child: Column(
-                                                                                mainAxisSize: MainAxisSize.min,
-                                                                                children: [
-                                                                                  Align(
-                                                                                    alignment: Alignment.topLeft,
-                                                                                    child: Text("Add Custom API KEY provided by sparrow sms",
-                                                                                        textAlign: TextAlign.left,
-                                                                                        style: GoogleFonts.comfortaa(
-                                                                                          textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: Color.fromARGB(255, 37, 0, 0)),
-                                                                                        )),
-                                                                                  ),
-                                                                                  const SizedBox(
-                                                                                    height: 20,
-                                                                                  ),
-                                                                                  TextFormField(
-                                                                                    controller: apiController,
-                                                                                    textAlign: TextAlign.start,
-                                                                                    style: GoogleFonts.comfortaa(
-                                                                                      textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: Color.fromARGB(255, 37, 0, 0)),
+                                                                              child: Padding(
+                                                                                padding: const EdgeInsets.all(30.0),
+                                                                                child: Column(
+                                                                                  mainAxisSize: MainAxisSize.min,
+                                                                                  children: [
+                                                                                    Align(
+                                                                                      alignment: Alignment.topLeft,
+                                                                                      child: Text("Add Custom API KEY provided by sparrow sms",
+                                                                                          textAlign: TextAlign.left,
+                                                                                          style: GoogleFonts.comfortaa(
+                                                                                            textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: Color.fromARGB(255, 37, 0, 0)),
+                                                                                          )),
                                                                                     ),
-                                                                                    decoration: InputDecoration(
-                                                                                      enabledBorder: const UnderlineInputBorder(
-                                                                                        borderSide: BorderSide(color: Colors.black),
-                                                                                      ),
-                                                                                      focusedBorder: const UnderlineInputBorder(
-                                                                                        borderSide: BorderSide(
-                                                                                          color: Colors.black,
-                                                                                        ),
-                                                                                      ),
-                                                                                      fillColor: Colors.black,
-                                                                                      hintText: "Token",
-                                                                                      hintStyle: GoogleFonts.comfortaa(textStyle: TextStyle(color: Colors.black.withOpacity(0.5))),
+                                                                                    const SizedBox(
+                                                                                      height: 20,
                                                                                     ),
-                                                                                  ),
-                                                                                  const SizedBox(
-                                                                                    height: 19,
-                                                                                  ),
-                                                                                  IconButton(
-                                                                                      onPressed: () {
-                                                                                        GetStorage().write('API', apiController.text);
+                                                                                    TextFormField(
+                                                                                      validator: (value) {
+                                                                                        print(value);
+                                                                                        if (value!.isEmpty) {
+                                                                                          return "Enter token";
+                                                                                        }
 
-                                                                                        setState(() {});
-                                                                                        Navigator.pop(context);
+                                                                                        return null;
                                                                                       },
-                                                                                      icon: const Icon(Icons.done_rounded))
-                                                                                ],
+                                                                                      controller: apiController,
+                                                                                      textAlign: TextAlign.start,
+                                                                                      style: GoogleFonts.comfortaa(
+                                                                                        textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w900, color: Color.fromARGB(255, 37, 0, 0)),
+                                                                                      ),
+                                                                                      decoration: InputDecoration(
+                                                                                        enabledBorder: const UnderlineInputBorder(
+                                                                                          borderSide: BorderSide(color: Colors.black),
+                                                                                        ),
+                                                                                        focusedBorder: const UnderlineInputBorder(
+                                                                                          borderSide: BorderSide(
+                                                                                            color: Colors.black,
+                                                                                          ),
+                                                                                        ),
+                                                                                        fillColor: Colors.black,
+                                                                                        hintText: "Token",
+                                                                                        hintStyle: GoogleFonts.comfortaa(textStyle: TextStyle(color: Colors.black.withOpacity(0.5))),
+                                                                                      ),
+                                                                                    ),
+                                                                                    const SizedBox(
+                                                                                      height: 19,
+                                                                                    ),
+                                                                                    IconButton(
+                                                                                        onPressed: () {
+                                                                                          if (_formKey1.currentState!.validate()) {
+                                                                                            GetStorage().write('API', apiController.text);
+
+                                                                                            setState(() {});
+                                                                                            Navigator.pop(context);
+                                                                                          }
+                                                                                        },
+                                                                                        icon: const Icon(Icons.done_rounded))
+                                                                                  ],
+                                                                                ),
                                                                               ),
                                                                             ),
                                                                           ),
@@ -681,93 +696,107 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Positioned(
-            right: 30,
+            left: 30,
             top: 50,
             child: IconButton(
               onPressed: () {
                 showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return AlertDialog(
-                        backgroundColor: Colors.transparent,
-                        content: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.white.withOpacity(0.8),
-                                Colors.white.withOpacity(0.7),
-                              ],
-                              begin: AlignmentDirectional.topStart,
-                              end: AlignmentDirectional.bottomEnd,
+                      return Form(
+                        key: _formKey1,
+                        child: AlertDialog(
+                          backgroundColor: Colors.transparent,
+                          content: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  Colors.white.withOpacity(0.8),
+                                  Colors.white.withOpacity(0.7),
+                                ],
+                                begin: AlignmentDirectional.topStart,
+                                end: AlignmentDirectional.bottomEnd,
+                              ),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
+                              border: Border.all(
+                                width: 1.5,
+                                color: Colors.white.withOpacity(0.8),
+                              ),
                             ),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
-                            border: Border.all(
-                              width: 1.5,
-                              color: Colors.white.withOpacity(0.8),
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(30.0),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text(
-                                      "Add Custom API KEY provided by sparrow sms",
-                                      textAlign: TextAlign.left,
-                                      style: GoogleFonts.comfortaa(
-                                        textStyle: const TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w900,
-                                            color:
-                                                Color.fromARGB(255, 37, 0, 0)),
-                                      )),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                TextFormField(
-                                  controller: apiController,
-                                  textAlign: TextAlign.start,
-                                  style: GoogleFonts.comfortaa(
-                                    textStyle: const TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.w900,
-                                        color: Color.fromARGB(255, 37, 0, 0)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(30.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                        "Add Custom API KEY provided by sparrow sms",
+                                        textAlign: TextAlign.left,
+                                        style: GoogleFonts.comfortaa(
+                                          textStyle: const TextStyle(
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.w900,
+                                              color: Color.fromARGB(
+                                                  255, 37, 0, 0)),
+                                        )),
                                   ),
-                                  decoration: InputDecoration(
-                                    enabledBorder: const UnderlineInputBorder(
-                                      borderSide:
-                                          BorderSide(color: Colors.black),
-                                    ),
-                                    focusedBorder: const UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    fillColor: Colors.black,
-                                    hintText: "Token",
-                                    hintStyle: GoogleFonts.comfortaa(
-                                        textStyle: TextStyle(
-                                            color:
-                                                Colors.black.withOpacity(0.5))),
+                                  const SizedBox(
+                                    height: 20,
                                   ),
-                                ),
-                                const SizedBox(
-                                  height: 19,
-                                ),
-                                IconButton(
-                                    onPressed: () {
-                                      GetStorage()
-                                          .write('API', apiController.text);
+                                  TextFormField(
+                                    validator: (value) {
+                                      print(value);
+                                      if (value!.isEmpty) {
+                                        return "Enter token";
+                                      }
 
-                                      setState(() {});
-                                      Navigator.pop(context);
+                                      return null;
                                     },
-                                    icon: const Icon(Icons.done_rounded))
-                              ],
+                                    controller: apiController,
+                                    textAlign: TextAlign.start,
+                                    style: GoogleFonts.comfortaa(
+                                      textStyle: const TextStyle(
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w900,
+                                          color: Color.fromARGB(255, 37, 0, 0)),
+                                    ),
+                                    decoration: InputDecoration(
+                                      enabledBorder: const UnderlineInputBorder(
+                                        borderSide:
+                                            BorderSide(color: Colors.black),
+                                      ),
+                                      focusedBorder: const UnderlineInputBorder(
+                                        borderSide: BorderSide(
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      fillColor: Colors.black,
+                                      hintText: "Token",
+                                      hintStyle: GoogleFonts.comfortaa(
+                                          textStyle: TextStyle(
+                                              color: Colors.black
+                                                  .withOpacity(0.5))),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 19,
+                                  ),
+                                  IconButton(
+                                      onPressed: () {
+                                        if (_formKey1.currentState!
+                                            .validate()) {
+                                          GetStorage()
+                                              .write('API', apiController.text);
+
+                                          setState(() {});
+                                          Navigator.pop(context);
+                                        }
+                                      },
+                                      icon: const Icon(Icons.done_rounded))
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -779,6 +808,22 @@ class _HomePageState extends State<HomePage> {
               },
               icon: const Icon(
                 Icons.api,
+                color: Color(0xFFFFECAF),
+              ),
+            ),
+          ),
+          Positioned(
+            right: 30,
+            top: 50,
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => documentationPage()));
+              },
+              icon: const Icon(
+                Icons.code,
                 color: Color(0xFFFFECAF),
               ),
             ),

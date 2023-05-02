@@ -13,5 +13,13 @@ class LoginGetStorage {
     box.write("API", API);
   }
 
+  static bool getOnboard() {
+    final box = GetStorage();
+    return box.read("ONBOARD") ?? true;
+  }
 
+  static setOnboard(bool ONBOARD) {
+    final box = GetStorage();
+    box.write("ONBOARD", ONBOARD);
+  }
 }
