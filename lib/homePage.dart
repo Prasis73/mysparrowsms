@@ -4,15 +4,18 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:mysparrowsms/documentationPage.dart';
-import 'package:mysparrowsms/getStorage.dart';
+import 'package:sparrowsms/ProfilePage.dart';
+import 'package:sparrowsms/documentationPage.dart';
+import 'package:sparrowsms/getStorage.dart';
 import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
+import 'Email.dart';
 import 'helper.dart';
 
 class HomePage extends StatefulWidget {
@@ -34,7 +37,6 @@ class _HomePageState extends State<HomePage> {
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
-          /* 'Authorization': 'Bearer $token', */
         });
     var value = json.decode(response.body);
     print("dajkgsfuyadsbivfuydsavf");
@@ -153,12 +155,17 @@ class _HomePageState extends State<HomePage> {
                         });
                       },
                       child: SizedBox(
-                          height: 300,
-                          width: MediaQuery.of(context).size.width,
-                          child: Image.asset(
-                            "./assets/sms.png",
-                            fit: BoxFit.cover,
-                          )),
+                        height: 300,
+                        width: MediaQuery.of(context).size.width,
+                        child: Image.asset(
+                          "./assets/sms.png",
+                          fit: BoxFit.cover,
+                        ),
+                        //     SvgPicture.asset(
+                        //   "./assets/topbanner.svg",
+                        //   fit: BoxFit.cover,
+                        // )
+                      ),
                     ),
                   ),
                   Expanded(
@@ -167,6 +174,7 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         SizedBox(
                             height: MediaQuery.of(context).size.height,
+                            width: MediaQuery.of(context).size.width,
                             child: Image.asset(
                               "./assets/sms.png",
                               fit: BoxFit.cover,
@@ -696,11 +704,13 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Positioned(
-            left: 30,
+            right: 30,
             top: 50,
             child: IconButton(
               onPressed: () {
-                showDialog(
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ProfilePage()));
+                /*  showDialog(
                     context: context,
                     builder: (BuildContext context) {
                       return Form(
@@ -804,7 +814,7 @@ class _HomePageState extends State<HomePage> {
                     }).then((value) {
                   apiController.clear();
                   setState(() {});
-                });
+                }); */
               },
               icon: const Icon(
                 Icons.api,
@@ -813,7 +823,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Positioned(
-            right: 30,
+            right: 130,
             top: 50,
             child: IconButton(
               onPressed: () {
@@ -827,7 +837,21 @@ class _HomePageState extends State<HomePage> {
                 color: Color(0xFFFFECAF),
               ),
             ),
-          )
+          ),
+          Positioned(
+            right: 80,
+            top: 50,
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => EmailScreen()));
+              },
+              icon: const Icon(
+                Icons.card_giftcard_rounded,
+                color: Color(0xFFFFECAF),
+              ),
+            ),
+          ),
         ],
       ),
     );

@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:zoom_widget/zoom_widget.dart';
@@ -33,7 +34,11 @@ class _ImageFileViewState extends State<ImageFileView> {
         initZoom: 0.0,
         maxZoomWidth: 1000,
         maxZoomHeight: 1550,
-        child:  Image.file(
+        child: kIsWeb
+            ? Image.network(
+                widget.data.path,
+              )
+            : Image.file(
                 widget.data,
               ),
         // CachedNetworkImage(imageUrl: widget.data),

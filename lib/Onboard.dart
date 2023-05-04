@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mysparrowsms/homePage.dart';
+import 'package:sparrowsms/homePage.dart';
 import 'package:onboarding/onboarding.dart';
 
 import 'getStorage.dart';

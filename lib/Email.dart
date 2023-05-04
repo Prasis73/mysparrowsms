@@ -4,13 +4,18 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:get_storage/get_storage.dart';
-import 'package:mysparrowsms/utlis/imageView.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server/gmail.dart';
 
+import 'model/tokenRequest_model.dart';
+import 'utlis/apiServices.dart';
 import 'utlis/dialogue.dart';
 import 'utlis/imageFileView.dart';
 import 'utlis/image_utils.dart';
@@ -41,71 +46,174 @@ class _EmailScreenState extends State<EmailScreen> {
   TextEditingController websiteApplicationController = TextEditingController();
   TextEditingController requirementController = TextEditingController();
 
-  sendMail() async {
+//using pub for ios and android only
+  /* sendEmail() async {
+    // Note that using a username and password for gmail only works if
+    // you have two-factor authentication enabled and created an App password.
+    // Search for "gmail app password 2fa"
+    // The alternative is to use oauth.
+    String username = 'roshansah729@gmail.com';
+    String password = 'eohdnghabjcahzyt';
+
+    final smtpServer = gmail(username, password);
+    // Use the SmtpServer class to configure an SMTP server:
+    // final smtpServer = SmtpServer('smtp.domain.com');
+    // See the named arguments of SmtpServer for further configuration
+    // options.
+
+    // Create our message.
+    final message = Message()
+      ..from = Address(username, 'Sparrow SMS')
+      ..recipients.add('admin@eachut.com')
+      ..subject = 'Test Dart Mailer library :: 😀 :: ${DateTime.now()}'
+      ..text = 'This is the plain text.\nThis is line 2 of the text part.'
+      ..html = "<h1>Test</h1>\n<p>Hey! Here's some HTML content</p>"
+      ..attachments = [
+        if (photo != null)
+          FileAttachment(photo!)
+            ..location = Location.inline
+            ..cid = '<CitizenFront@3.141>',
+        if (photo1 != null)
+          FileAttachment(photo1!)
+            ..location = Location.inline
+            ..cid = '<CitizenBack@3.141>',
+        if (photo2 != null)
+          FileAttachment(photo2!)
+            ..location = Location.inline
+            ..cid = '<CompanyRegistration@3.141>',
+        if (photo3 != null)
+          FileAttachment(photo3!)
+            ..location = Location.inline
+            ..cid = '<CompanyPANvat@3.141>'
+      ];
+
+    try {
+      final sendReport = await send(message, smtpServer);
+      print('Message sent: ' + sendReport.toString());
+    } on MailerException catch (e) {
+      print('Message not sent.');
+      for (var p in e.problems) {
+        print('Problem: ${p.code}: ${p.msg}');
+      }
+    }
+    // DONE
+  }
+ */
+
+//sending mail using api
+  sendMailApi() async {
     setState(() {
-      _apiMessage = "";
       _isLoading = true;
     });
-
-//send mail
-    final serviceId = 'service_y519dl3';
-    final templateId = 'template_hjk1rij';
-    final userId = 'fkSUEudS6hQLPn0tK';
-    final accessToken = 'TByGNE7zMmLTxGnMseDTg';
-    final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'service_id': serviceId,
-        'template_id': templateId,
-        'accessToken': accessToken,
-        'user_id': userId,
-        'template_params': {
-          'reply_to': 'admin@eachut.com',
-          'from_name': nameController.text,
-          'message':
-              "Name:${nameController.text} \nPhone:${phoneController.text} \nNote:${requirementController.text}  \n",
-        },
-      }),
+    TokenRequestModal tokenRequestModal = TokenRequestModal(
+      name: nameController.text,
+      phone: phoneController.text,
+      email: emailController.text,
+      companyName: companyNameController.text,
+      websiteApplication: websiteApplicationController.text,
+      requirement: requirementController.text,
+      citizenImageFront: photo,
+      citizenImageBack: photo1,
+      companyRegistration: photo2,
+      companyPanVat: photo3,
     );
+    ApiService.addTokenRequest(tokenRequestModal).then((value) {
+      print(value);
 
-    print(response.body);
-
-    if (response.body == "OK") {
-//set storage
-      // final box = GetStorage();
-
-      // String receipt = ReciptDataGetStorage.getReciptData();
-      // print(receipt);
-      // String addToList =
-      //     "Name:${nameController.text} ^^Phone:${phoneController.text} ^^Note:${noteController.text} ^^${widget.image}.png//";
-      // String ReciptData = receipt + addToList;
-      // // String ReciptData = "";
-      // print(ReciptData);
-
-      // ReciptDataGetStorage.setReciptData(ReciptData);
-
-//snackbar
-      const snackBar = SnackBar(
-        content: Center(
-            child: Text(
-          'We will contact you soon!!!',
-          style: TextStyle(
-              color: Colors.blueGrey,
-              fontSize: 16,
-              fontWeight: FontWeight.bold),
-        )),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-      Navigator.pop(context);
-    } else {
-      setState(() {
-        _apiMessage = "";
-        _isLoading = false;
-      });
-    }
+      if (value["success"] == true) {
+        print("Success");
+        setState(() {
+          _isLoading = false;
+          nameController.clear();
+          phoneController.clear();
+          emailController.clear();
+          companyNameController.clear();
+          websiteApplicationController.clear();
+          requirementController.clear();
+          photo = null;
+          photo1 = null;
+          photo2 = null;
+          photo3 = null;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Center(
+              child: Text(
+            "Mail Send Success. We will contact you soon",
+            style: TextStyle(
+                color: Colors.blueGrey,
+                fontSize: 16,
+                fontWeight: FontWeight.bold),
+          )),
+        ));
+      } else {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                contentPadding: const EdgeInsets.all(30),
+                backgroundColor: Theme.of(context).secondaryHeaderColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                  side: BorderSide(color: Theme.of(context).primaryColor),
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Email NOT SENT",
+                        style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontFamily: "IMPACT",
+                            fontSize: 48),
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      _apiMessage,
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontFamily: "Sofia Pro",
+                          fontWeight: FontWeight.bold,
+                          fontSize: 28),
+                      textAlign: TextAlign.left,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: Container(
+                            width: 85,
+                            height: 85,
+                            padding: const EdgeInsets.all(30),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            child: Icon(
+                              Icons.cancel,
+                              color: Theme.of(context).secondaryHeaderColor,
+                            )),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            });
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    });
   }
 
   @override
@@ -282,14 +390,14 @@ class _EmailScreenState extends State<EmailScreen> {
                                             CrossAxisAlignment.center,
                                         children: [
                                           Text(
-                                            "RS 500",
+                                            "RS 5000",
                                             textAlign: TextAlign.center,
                                           ),
                                           const SizedBox(
                                             height: 15,
                                           ),
                                           Text(
-                                            "500 Credit",
+                                            "5000 Credit",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 fontFamily: "Sofia_pro",
@@ -321,14 +429,14 @@ class _EmailScreenState extends State<EmailScreen> {
                                             CrossAxisAlignment.center,
                                         children: [
                                           Text(
-                                            "RS 500",
+                                            "RS 10000",
                                             textAlign: TextAlign.center,
                                           ),
                                           const SizedBox(
                                             height: 15,
                                           ),
                                           Text(
-                                            "500 Credit",
+                                            "10000 Credit",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 fontFamily: "Sofia_pro",
@@ -356,6 +464,7 @@ class _EmailScreenState extends State<EmailScreen> {
                         children: [
                           SizedBox(
                               height: MediaQuery.of(context).size.height,
+                              width: MediaQuery.of(context).size.width,
                               child: Image.asset(
                                 "./assets/sms.png",
                                 fit: BoxFit.cover,
@@ -867,18 +976,22 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                 ? Stack(
                                                                     children: [
                                                                       ClipRRect(
-                                                                          borderRadius: BorderRadius.circular(
-                                                                              30),
-                                                                          child:
-                                                                              Image.file(
-                                                                            photo!,
-                                                                            fit:
-                                                                                BoxFit.cover,
-                                                                            height:
-                                                                                100,
-                                                                            width:
-                                                                                300,
-                                                                          )),
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(30),
+                                                                        child: kIsWeb
+                                                                            ? Image.network(
+                                                                                photo!.path,
+                                                                                fit: BoxFit.cover,
+                                                                                height: 100,
+                                                                                width: 300,
+                                                                              )
+                                                                            : Image.file(
+                                                                                photo!,
+                                                                                fit: BoxFit.cover,
+                                                                                height: 100,
+                                                                                width: 300,
+                                                                              ),
+                                                                      ),
                                                                       Positioned(
                                                                           right:
                                                                               5,
@@ -1026,13 +1139,22 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                     ? Stack(
                                                                         children: [
                                                                           ClipRRect(
-                                                                              borderRadius: BorderRadius.circular(30),
-                                                                              child: Image.file(
-                                                                                photo1!,
-                                                                                fit: BoxFit.cover,
-                                                                                height: 100,
-                                                                                width: 300,
-                                                                              )),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(30),
+                                                                            child: kIsWeb
+                                                                                ? Image.network(
+                                                                                    photo1!.path,
+                                                                                    fit: BoxFit.cover,
+                                                                                    height: 100,
+                                                                                    width: 300,
+                                                                                  )
+                                                                                : Image.file(
+                                                                                    photo1!,
+                                                                                    fit: BoxFit.cover,
+                                                                                    height: 100,
+                                                                                    width: 300,
+                                                                                  ),
+                                                                          ),
                                                                           Positioned(
                                                                               right: 5,
                                                                               child: IconButton(
@@ -1165,13 +1287,22 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                     ? Stack(
                                                                         children: [
                                                                           ClipRRect(
-                                                                              borderRadius: BorderRadius.circular(30),
-                                                                              child: Image.file(
-                                                                                photo2!,
-                                                                                fit: BoxFit.cover,
-                                                                                height: 100,
-                                                                                width: 300,
-                                                                              )),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(30),
+                                                                            child: kIsWeb
+                                                                                ? Image.network(
+                                                                                    photo2!.path,
+                                                                                    fit: BoxFit.cover,
+                                                                                    height: 100,
+                                                                                    width: 300,
+                                                                                  )
+                                                                                : Image.file(
+                                                                                    photo2!,
+                                                                                    fit: BoxFit.cover,
+                                                                                    height: 100,
+                                                                                    width: 300,
+                                                                                  ),
+                                                                          ),
                                                                           Positioned(
                                                                               right: 5,
                                                                               child: IconButton(
@@ -1304,13 +1435,22 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                     ? Stack(
                                                                         children: [
                                                                           ClipRRect(
-                                                                              borderRadius: BorderRadius.circular(30),
-                                                                              child: Image.file(
-                                                                                photo3!,
-                                                                                fit: BoxFit.cover,
-                                                                                height: 100,
-                                                                                width: 300,
-                                                                              )),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(30),
+                                                                            child: kIsWeb
+                                                                                ? Image.network(
+                                                                                    photo3!.path,
+                                                                                    fit: BoxFit.cover,
+                                                                                    height: 100,
+                                                                                    width: 300,
+                                                                                  )
+                                                                                : Image.file(
+                                                                                    photo3!,
+                                                                                    fit: BoxFit.cover,
+                                                                                    height: 100,
+                                                                                    width: 300,
+                                                                                  ),
+                                                                          ),
                                                                           Positioned(
                                                                               right: 5,
                                                                               child: IconButton(
@@ -1379,7 +1519,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                     connectivityResult ==
                                                                         ConnectivityResult
                                                                             .wifi) {
-                                                                  sendMail();
+                                                                  sendMailApi();
                                                                 } else {
                                                                   print(
                                                                       "no wifi");
@@ -1430,23 +1570,36 @@ class _EmailScreenState extends State<EmailScreen> {
                                                           ],
                                                         ),
                                                         child: Center(
-                                                          child: Text(
-                                                            "Send"
-                                                                .toUpperCase(),
-                                                            style: GoogleFonts.lato(
-                                                                textStyle: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .headlineSmall,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                color: Colors
-                                                                    .grey[50]),
-                                                          ),
+                                                          child: _isLoading
+                                                              ? LoadingAnimationWidget
+                                                                  .hexagonDots(
+                                                                  color: Colors
+                                                                      .white
+                                                                      .withOpacity(
+                                                                          0.7),
+                                                                  size: 25,
+                                                                )
+                                                              : Text(
+                                                                  "Send"
+                                                                      .toUpperCase(),
+                                                                  style: GoogleFonts.lato(
+                                                                      textStyle: Theme.of(
+                                                                              context)
+                                                                          .textTheme
+                                                                          .headlineSmall,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      color: Colors
+                                                                              .grey[
+                                                                          50]),
+                                                                ),
                                                         ),
                                                       ),
                                                     ),
+                                                    SizedBox(
+                                                      height: 20,
+                                                    )
                                                   ],
                                                 ),
                                               ),

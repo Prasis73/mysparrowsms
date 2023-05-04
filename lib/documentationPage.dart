@@ -4,7 +4,7 @@ import 'package:dart_code_viewer2/dart_code_viewer2.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
-import 'package:mysparrowsms/Email.dart';
+import 'package:sparrowsms/Email.dart';
 
 class documentationPage extends StatefulWidget {
   const documentationPage({super.key});
@@ -122,6 +122,7 @@ class _documentationPageState extends State<documentationPage> {
                       children: [
                         SizedBox(
                             height: MediaQuery.of(context).size.height,
+                            width: MediaQuery.of(context).size.width,
                             child: Image.asset(
                               "./assets/sms.png",
                               fit: BoxFit.cover,
@@ -280,20 +281,6 @@ let body = {
               },
               icon: const Icon(
                 Icons.arrow_back_ios,
-                color: Color(0xFFFFECAF),
-              ),
-            ),
-          ),
-          Positioned(
-            right: 30,
-            top: 50,
-            child: IconButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => EmailScreen()));
-              },
-              icon: const Icon(
-                Icons.card_giftcard_rounded,
                 color: Color(0xFFFFECAF),
               ),
             ),

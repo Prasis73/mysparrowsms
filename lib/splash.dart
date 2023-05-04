@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mysparrowsms/Onboard.dart';
+import 'package:sparrowsms/Onboard.dart';
 
 import 'getStorage.dart';
 import 'homePage.dart';

@@ -31,7 +31,7 @@ class _MyAppState extends State<MyApp> {
           Theme.of(context).textTheme,
         ),
       ),
-      title: 'mysparrowsms',
+      title: 'sparrowsms',
       debugShowCheckedModeBanner: false,
       home: const Splash(),
     );
