@@ -61,7 +61,6 @@ class _ProfilePageState extends State<ProfilePage> {
         headers: {'Content-Type': 'application/json'},
       );
 
-
       var data = jsonDecode(response.body);
       if (data["response_code"] == 200) {
         setState(() {
@@ -183,7 +182,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             height: 300,
                             width: MediaQuery.of(context).size.width,
                             child: Image.asset(
-                              "./assets/sms.png",
+                              "./assets/sms_banner.jpg",
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -199,7 +198,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             height: MediaQuery.of(context).size.height,
                             width: MediaQuery.of(context).size.width,
                             child: Image.asset(
-                              "./assets/sms.png",
+                              "./assets/sms_banner.jpg",
                               fit: BoxFit.cover,
                             )),
                         ClipRRect(
@@ -344,8 +343,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                           BorderSide(
                                                                               color: Colors.black),
                                                                     ),
-                                                                    icon:
-                                                                        Icon(
+                                                                    icon: Icon(
                                                                       Icons
                                                                           .token,
                                                                       color: Colors
@@ -684,7 +682,7 @@ class _ProfilePageState extends State<ProfilePage> {
               },
               icon: const Icon(
                 Icons.arrow_back_ios,
-                color: Color(0xFFFFECAF),
+                color: Colors.black,
               ),
             ),
           ),
@@ -693,12 +691,14 @@ class _ProfilePageState extends State<ProfilePage> {
             top: 50,
             child: IconButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const EmailScreen()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const EmailScreen()));
               },
               icon: const Icon(
                 Icons.card_giftcard_rounded,
-                color: Color(0xFFFFECAF),
+                color: Colors.black,
               ),
             ),
           ),

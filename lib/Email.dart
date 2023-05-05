@@ -313,7 +313,7 @@ class _EmailScreenState extends State<EmailScreen> {
                               height: 300,
                               width: MediaQuery.of(context).size.width,
                               child: Image.asset(
-                                "./assets/sms.png",
+                                "./assets/sms_banner.jpg",
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -458,7 +458,7 @@ class _EmailScreenState extends State<EmailScreen> {
                               height: MediaQuery.of(context).size.height,
                               width: MediaQuery.of(context).size.width,
                               child: Image.asset(
-                                "./assets/sms.png",
+                                "./assets/sms_banner.jpg",
                                 fit: BoxFit.cover,
                               )),
                           ClipRRect(
@@ -1622,7 +1622,7 @@ class _EmailScreenState extends State<EmailScreen> {
                 },
                 icon: const Icon(
                   Icons.arrow_back_ios,
-                  color: Color(0xFFFFECAF),
+                  color: Colors.black,
                 ),
               ),
             ),
