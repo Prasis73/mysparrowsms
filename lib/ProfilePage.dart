@@ -1,28 +1,19 @@
+// ignore_for_file: file_names, non_constant_identifier_names
+
 import 'dart:convert';
-import 'dart:developer';
-import 'dart:io';
 import 'dart:ui';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 
-import 'package:get_storage/get_storage.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:mailer/mailer.dart';
-import 'package:mailer/smtp_server/gmail.dart';
 import 'package:sparrowsms/getStorage.dart';
 
-import 'model/tokenRequest_model.dart';
-import 'utlis/apiServices.dart';
-import 'utlis/dialogue.dart';
-import 'utlis/imageFileView.dart';
-import 'utlis/image_utils.dart';
+import 'Email.dart';
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({
+  const ProfilePage({
     super.key,
   });
 
@@ -33,6 +24,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   bool _isLoading = false;
   bool tokenEmpty = false;
+  String responseMessage = "";
   String credits_available = "";
   String credits_consumed = "";
   String last_balance_added = "";
@@ -44,22 +36,24 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    smsToken();
+    GetSetStorage.getAPI() == ""
+        ? setState(() {
+            tokenEmpty = true;
+          })
+        : smsToken();
   }
 
 //fetch remaining sms using token
   smsToken() async {
-    if (LoginGetStorage.getAPI() == "") {
+    if (GetSetStorage.getAPI() == "") {
       setState(() {
         tokenEmpty = true;
       });
-      print("tokenEmpty");
     } else {
       setState(() {
         tokenEmpty = false;
       });
-      print("token not empty");
-      String sparrowsmsToken = LoginGetStorage.getAPI();
+      String sparrowsmsToken = GetSetStorage.getAPI();
       final url = Uri.parse(
           "http://api.sparrowsms.com/v2/credit/?token=$sparrowsmsToken");
       final response = await http.get(
@@ -67,17 +61,25 @@ class _ProfilePageState extends State<ProfilePage> {
         headers: {'Content-Type': 'application/json'},
       );
 
-      print(response.body);
 
       var data = jsonDecode(response.body);
-
-      setState(() {
-        _isLoading = false;
-        credits_available = data["credits_available"].toString();
-        credits_consumed = data["credits_consumed"].toString();
-        last_balance_added = data["last_balance_added"].toString();
-        minimum_credit = data["minimum_credit"].toString();
-      });
+      if (data["response_code"] == 200) {
+        setState(() {
+          _isLoading = false;
+          credits_available = data["credits_available"].toString();
+          credits_consumed = data["credits_consumed"].toString();
+          last_balance_added = data["last_balance_added"].toString();
+          minimum_credit = data["minimum_credit"].toString();
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+          tokenEmpty = true;
+          responseMessage = data["response"].toString();
+          tokenController.clear();
+        });
+        GetSetStorage.setAPI("");
+      }
     }
   }
 
@@ -244,7 +246,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                         child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Text(
-                                          "Provide token and see details",
+                                          tokenEmpty
+                                              ? "Provide token and see details"
+                                              : "See credit information",
                                           textAlign: TextAlign.center,
                                           style: GoogleFonts.comfortaa(
                                             textStyle: const TextStyle(
@@ -323,7 +327,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                     }
                                                                     return null;
                                                                   },
-                                                                  style: TextStyle(
+                                                                  style: const TextStyle(
                                                                       color: Colors
                                                                           .black),
                                                                   decoration:
@@ -341,7 +345,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                               color: Colors.black),
                                                                     ),
                                                                     icon:
-                                                                        const Icon(
+                                                                        Icon(
                                                                       Icons
                                                                           .token,
                                                                       color: Colors
@@ -368,6 +372,19 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                         'Sparrow sms token',
                                                                   ),
                                                                 ),
+                                                                responseMessage ==
+                                                                        ""
+                                                                    ? const SizedBox()
+                                                                    : Padding(
+                                                                        padding:
+                                                                            const EdgeInsets.all(8),
+                                                                        child:
+                                                                            Text(
+                                                                          responseMessage,
+                                                                          style:
+                                                                              const TextStyle(color: Colors.redAccent),
+                                                                        ),
+                                                                      ),
                                                                 const SizedBox(
                                                                   height: 10,
                                                                 ),
@@ -409,13 +426,18 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                   child:
                                                                       InkWell(
                                                                     onTap: () {
+                                                                      setState(
+                                                                          () {
+                                                                        responseMessage =
+                                                                            "";
+                                                                      });
                                                                       if (_formKey
                                                                           .currentState!
                                                                           .validate()) {
                                                                         String
                                                                             tokenInput =
                                                                             tokenController.text;
-                                                                        LoginGetStorage.setAPI(
+                                                                        GetSetStorage.setAPI(
                                                                             tokenInput);
                                                                         smsToken();
                                                                         setState(
@@ -442,7 +464,49 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                           )),
                                                                     ),
                                                                   ),
-                                                                )
+                                                                ),
+                                                                const SizedBox(
+                                                                  height: 20,
+                                                                ),
+                                                                Center(
+                                                                    child: RichText(
+                                                                        text: TextSpan(children: [
+                                                                  TextSpan(
+                                                                      text:
+                                                                          "dont have Token?",
+                                                                      style: GoogleFonts
+                                                                          .comfortaa(
+                                                                        textStyle: const TextStyle(
+                                                                            fontSize:
+                                                                                12,
+                                                                            fontWeight: FontWeight
+                                                                                .w900,
+                                                                            color: Color.fromARGB(
+                                                                                255,
+                                                                                37,
+                                                                                0,
+                                                                                0)),
+                                                                      )),
+                                                                  WidgetSpan(
+                                                                      child:
+                                                                          InkWell(
+                                                                    onTap: () {
+                                                                      Navigator.push(
+                                                                          context,
+                                                                          MaterialPageRoute(
+                                                                              builder: (context) => const EmailScreen()));
+                                                                    },
+                                                                    child: Text(
+                                                                        " Request here",
+                                                                        style: GoogleFonts
+                                                                            .comfortaa(
+                                                                          textStyle: const TextStyle(
+                                                                              fontSize: 12,
+                                                                              fontWeight: FontWeight.w900,
+                                                                              color: Colors.redAccent),
+                                                                        )),
+                                                                  ))
+                                                                ]))),
                                                               ],
                                                             )
                                                           : Column(
@@ -454,12 +518,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                       .center,
                                                               children: [
                                                                 Text(
-                                                                  "Credits available : " +
-                                                                      credits_available,
+                                                                  "Credits available : $credits_available",
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
-                                                                  style: TextStyle(
+                                                                  style: const TextStyle(
                                                                       fontFamily:
                                                                           "Sofia_pro",
                                                                       color: Colors
@@ -474,12 +537,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                   height: 15,
                                                                 ),
                                                                 Text(
-                                                                  "Credits consumed : " +
-                                                                      credits_consumed,
+                                                                  "Credits consumed : $credits_consumed",
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
-                                                                  style: TextStyle(
+                                                                  style: const TextStyle(
                                                                       fontFamily:
                                                                           "Sofia_pro",
                                                                       color: Colors
@@ -494,12 +556,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                   height: 5,
                                                                 ),
                                                                 Text(
-                                                                  "last balance added : " +
-                                                                      last_balance_added,
+                                                                  "last balance added : $last_balance_added",
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
-                                                                  style: TextStyle(
+                                                                  style: const TextStyle(
                                                                       fontFamily:
                                                                           "Sofia_pro",
                                                                       color: Colors
@@ -514,12 +575,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                   height: 5,
                                                                 ),
                                                                 Text(
-                                                                  "minimum credit : " +
-                                                                      minimum_credit,
+                                                                  "minimum credit : $minimum_credit",
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
-                                                                  style: TextStyle(
+                                                                  style: const TextStyle(
                                                                       fontFamily:
                                                                           "Sofia_pro",
                                                                       color: Colors
@@ -571,7 +631,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                   child:
                                                                       InkWell(
                                                                     onTap: () {
-                                                                      LoginGetStorage
+                                                                      GetSetStorage
                                                                           .setAPI(
                                                                               "");
 
@@ -624,6 +684,20 @@ class _ProfilePageState extends State<ProfilePage> {
               },
               icon: const Icon(
                 Icons.arrow_back_ios,
+                color: Color(0xFFFFECAF),
+              ),
+            ),
+          ),
+          Positioned(
+            right: 30,
+            top: 50,
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const EmailScreen()));
+              },
+              icon: const Icon(
+                Icons.card_giftcard_rounded,
                 color: Color(0xFFFFECAF),
               ),
             ),

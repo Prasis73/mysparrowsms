@@ -41,6 +41,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.1"
+  codeview:
+    dependency: "direct main"
+    description:
+      name: codeview
+      sha256: ce052811499796482e50c7497b8a8c396183b57cc6e1bdbdf935b68b1257d286
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.16"
   collection:
     dependency: transitive
     description:

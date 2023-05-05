@@ -1,10 +1,11 @@
+// ignore_for_file: file_names, camel_case_types, unnecessary_string_escapes
+
 import 'dart:ui';
 
-import 'package:dart_code_viewer2/dart_code_viewer2.dart';
+import 'package:codeview/codeview.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart';
-import 'package:sparrowsms/Email.dart';
+import 'package:sparrowsms/utlis/tabSwitch.dart';
 
 class documentationPage extends StatefulWidget {
   const documentationPage({super.key});
@@ -14,6 +15,17 @@ class documentationPage extends StatefulWidget {
 }
 
 class _documentationPageState extends State<documentationPage> {
+  List<String> head = ["Send SMS", "Check Credit"];
+
+  PageController _pageController = PageController();
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController =
+        PageController(initialPage: 0, keepPage: true, viewportFraction: 1);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -214,17 +226,76 @@ class _documentationPageState extends State<documentationPage> {
                                                   .size
                                                   .width -
                                               50,
-                                          child: Center(
-                                            child: Padding(
+                                          child: Padding(
                                               padding:
                                                   const EdgeInsets.symmetric(
                                                 horizontal: 40,
                                                 vertical: 0,
                                               ),
-                                              child: DartCodeViewer.textColor(
-                                                r'''
-/*  FOR NODE.JS  */
-
+                                              child: Column(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: TabSwitch(
+                                                      values: head,
+                                                      width: 1100,
+                                                      onToggleCallback:
+                                                          (value) {
+                                                        value == 1
+                                                            ? _pageController.nextPage(
+                                                                duration:
+                                                                    const Duration(
+                                                                        milliseconds:
+                                                                            50),
+                                                                curve: Curves
+                                                                    .easeIn)
+                                                            : _pageController.previousPage(
+                                                                duration:
+                                                                    const Duration(
+                                                                        milliseconds:
+                                                                            50),
+                                                                curve: Curves
+                                                                    .easeIn);
+                                                      },
+                                                      boxShape:
+                                                          BoxShape.rectangle,
+                                                      buttonColor: const Color(
+                                                          0xFF0A3157),
+                                                      backgroundColor:
+                                                          const Color(
+                                                              0xFFB5C1CC),
+                                                      textColor: const Color(
+                                                          0xFFFFFFFF),
+                                                    ),
+                                                  ),
+                                                  Expanded(
+                                                    child: SizedBox(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .height,
+                                                      width:
+                                                          MediaQuery.of(context)
+                                                              .size
+                                                              .width,
+                                                      child: PageView(
+                                                        controller:
+                                                            _pageController,
+                                                        // scrollDirection: Axis.horizontal,
+                                                        physics:
+                                                            const NeverScrollableScrollPhysics(),
+                                                        reverse: false,
+                                                        onPageChanged:
+                                                            (index) {},
+                                                        children: <Widget>[
+                                                          ListView(
+                                                            padding:
+                                                                EdgeInsets.zero,
+                                                            children: const [
+                                                              CodeView(
+                                                                code: """
 var sparrowsmsToken = "PASTE_YOUR_TOKEN_HERE";
 var phoneNumber = "PASTE_YOUR_PHONENUMBER_HERE"; //for bulk use comma eg: "98xxxxxxxx,97xxxxxxxx";
 var message = "PASTE_YOUR_MESSAGE_HERE";
@@ -249,15 +320,297 @@ let body = {
                   "Message queued and will be delivered shortly",
               });
             });
-''',
-                                                textStyle: GoogleFonts.lato(),
-                                                commentColor: Colors.grey,
-                                                baseColor: Colors.pink,
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                              ),
-                                            ),
-                                          ),
+""",
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .black45,
+                                                                textColor:
+                                                                    Colors
+                                                                        .white,
+                                                                title:
+                                                                    'Node JS',
+                                                              ),
+                                                              SizedBox(
+                                                                height: 20,
+                                                              ),
+                                                              CodeView(
+                                                                code: """
+var sparrowsmsToken = "PASTE_YOUR_TOKEN_HERE";
+var phoneNumber = "PASTE_YOUR_PHONENUMBER_HERE"; //for bulk use comma eg: "98xxxxxxxx,97xxxxxxxx";
+var message = "PASTE_YOUR_MESSAGE_HERE";
+
+final url = Uri.parse('http://api.sparrowsms.com/v2/sms/');
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'token': sparrowsmsToken,
+        'from': "TheAlert",
+        'to': phoneNumber.toString(),
+        'text':message.toString()
+      }),
+    );
+
+    print(response.body);
+
+""",
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .black45,
+                                                                textColor:
+                                                                    Colors
+                                                                        .white,
+                                                                title:
+                                                                    'Flutter Dart',
+                                                              ),
+                                                              SizedBox(
+                                                                height: 20,
+                                                              ),
+                                                              CodeView(
+                                                                code: """
+\$args = http_build_query(array(
+        'token' => '<token-provided>',
+        'from'  => '<Identity>',
+        'to'    => '<comma_separated 10-digit mobile numbers>',
+        'text'  => 'SMS Message to be sent'));
+
+    \$url = "http://api.sparrowsms.com/v2/sms/";
+
+    # Make the call using API.
+    \$ch = curl_init();
+    curl_setopt(\$ch, CURLOPT_URL, \$url);
+    curl_setopt(\$ch, CURLOPT_POST, 1);
+    curl_setopt(\$ch, CURLOPT_POSTFIELDS,\$args);
+    curl_setopt(\$ch, CURLOPT_RETURNTRANSFER, 1);
+
+    // Response
+    \$response = curl_exec(\$ch);
+    \$status_code = curl_getinfo(\$ch, CURLINFO_HTTP_CODE);
+    curl_close(\$ch);
+""",
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .black45,
+                                                                textColor:
+                                                                    Colors
+                                                                        .white,
+                                                                title: 'Php',
+                                                              ),
+                                                              SizedBox(
+                                                                height: 20,
+                                                              ),
+                                                              CodeView(
+                                                                code: """
+import requests
+
+    r = requests.post(
+            "http://api.sparrowsms.com/v2/sms/",
+            data={'token' : '<token-provided>',
+                  'from'  : '<Identity>',
+                  'to'    : '<comma_separated 10-digit mobile numbers>',
+                  'text'  : 'SMS Message to be sent'})
+
+    status_code = r.status_code
+    response = r.text
+    response_json = r.json()
+""",
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .black45,
+                                                                textColor:
+                                                                    Colors
+                                                                        .white,
+                                                                title: 'Python',
+                                                              ),
+                                                              SizedBox(
+                                                                height: 20,
+                                                              ),
+                                                              CodeView(
+                                                                code: """
+using System.Collections.Specialized;
+    using System.Net;
+    using System.Text;
+
+    namespace SparrowSMSTest{
+        class Program{
+            static void Main(string[] args){
+                var responseTest = PostSendSMS('<Identity>', '<token-provided>', '<comma_separated 10-digit mobile numbers>', 'SMS Message to be sent');
+            }
+
+            private static string PostSendSMS(string from, string token, string to, string text){
+                using (var client = new WebClient()){
+                    var values = new NameValueCollection();
+                    values["from"] = from;
+                    values["token"] = token;
+                    values["to"] = to;
+                    values["text"] = text;
+                    var response = client.UploadValues("http://api.sparrowsms.com/v2/sms/", "Post", values);
+                    var responseString = Encoding.Default.GetString(response);
+                    return responseString;
+                }
+            }
+        }
+    }
+""",
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .black45,
+                                                                textColor:
+                                                                    Colors
+                                                                        .white,
+                                                                title: 'C#',
+                                                              ),
+                                                              SizedBox(
+                                                                height: 20,
+                                                              ),
+                                                              CodeView(
+                                                                code:
+                                                                    """curl -s http://api.sparrowsms.com/v2/sms/ \
+        -F token='<token-provided>' \
+        -F from='<Identity>' \
+        -F to='<comma_separated 10-digit mobile numbers>' \
+        -F text='SMS Message to be sent'
+""",
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .black45,
+                                                                textColor:
+                                                                    Colors
+                                                                        .white,
+                                                                title: 'Curl',
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          ListView(
+                                                            padding:
+                                                                EdgeInsets.zero,
+                                                            children: const [
+                                                              CodeView(
+                                                                code: """
+String sparrowsmsToken = "PASTE_YOUR_TOKEN_HERE";
+
+final url = Uri.parse("http://api.sparrowsms.com/v2/credit/?token="+sparrowsmsToken);
+
+final response = await http.get(
+  url,
+  headers: {'Content-Type': 'application/json'},
+);
+
+print(response.body);
+""",
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .black45,
+                                                                textColor:
+                                                                    Colors
+                                                                        .white,
+                                                                title:
+                                                                    'Flutter Dart',
+                                                              ),
+                                                              SizedBox(
+                                                                height: 20,
+                                                              ),
+                                                              CodeView(
+                                                                code: """
+\$api_url = "http://api.sparrowsms.com/v2/credit/?".
+        http_build_query(array(
+            'token' => '<token-provided>',
+
+\$response = file_get_contents(\$api_url);
+""",
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .black45,
+                                                                textColor:
+                                                                    Colors
+                                                                        .white,
+                                                                title: 'Php',
+                                                              ),
+                                                              SizedBox(
+                                                                height: 20,
+                                                              ),
+                                                              CodeView(
+                                                                code: """
+ import requests
+
+    r = requests.get(
+            "http://api.sparrowsms.com/v2/credit/",
+            params={'token' : '<token-provided>'})
+
+    status_code = r.status_code
+    response = r.text
+    response_json = r.json()
+""",
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .black45,
+                                                                textColor:
+                                                                    Colors
+                                                                        .white,
+                                                                title: 'Python',
+                                                              ),
+                                                              SizedBox(
+                                                                height: 20,
+                                                              ),
+                                                              CodeView(
+                                                                code: """
+using System.Collections.Specialized;
+    using System.IO;
+    using System.Net;
+    using System.Text;
+
+    namespace SparrowSMSTest{
+
+    class Program{
+        static void Main(string[] args)
+        {
+            var getResponseTest = GetCredits('<token-provided>');
+        }
+
+        private static string GetCredits(string token)
+        {
+            using (var client = new WebClient())
+            {
+                string parameters = "?";
+                parameters += "token=" + token;
+                var responseString = client.DownloadString("http://api.sparrowsms.com/v2/credit/" + parameters);
+                return responseString;
+            }
+        }
+    }
+""",
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .black45,
+                                                                textColor:
+                                                                    Colors
+                                                                        .white,
+                                                                title: 'C#',
+                                                              ),
+                                                              SizedBox(
+                                                                height: 20,
+                                                              ),
+                                                              CodeView(
+                                                                code: """
+curl -s http://api.sparrowsms.com/v2/credit/ \
+        -F token='<token-provided>' \
+""",
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .black45,
+                                                                textColor:
+                                                                    Colors
+                                                                        .white,
+                                                                title: 'Curl',
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              )),
                                         ),
                                       ),
                                     ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class DialogueUtils {
+  // ignore: no_leading_underscores_for_local_identifiers
   static dialogue(BuildContext context, _apiMessage) async {
     showDialog(
         context: context,
@@ -56,7 +56,7 @@ class DialogueUtils {
                         borderRadius: BorderRadius.circular(30),
                         color: Theme.of(context).primaryColor,
                       ),
-                      child: Icon(Icons.cancel_sharp),
+                      child: const Icon(Icons.cancel_sharp),
                     ),
                   ),
                 ),

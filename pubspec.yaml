@@ -46,6 +46,7 @@ dependencies:
   zoom_widget: ^0.2.0 #to zoom image
   mailer: ^6.0.1 #for android ios
   dio: ^4.0.6 #for calling api and image files
+  codeview: ^0.0.16
 
 dev_dependencies:
   flutter_test:

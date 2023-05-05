@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, depend_on_referenced_packages, unused_import, no_leading_underscores_for_local_identifiers
+
 import 'dart:convert';
 
 import '../model/tokenRequest_model.dart';

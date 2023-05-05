@@ -1,10 +1,9 @@
-// ignore_for_file: file_names
+// ignore_for_file: file_names, unnecessary_string_interpolations, use_build_context_synchronously, prefer_adjacent_string_concatenation
 
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
@@ -15,7 +14,6 @@ import 'package:sparrowsms/getStorage.dart';
 import 'dart:convert';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
-import 'Email.dart';
 import 'helper.dart';
 
 class HomePage extends StatefulWidget {
@@ -30,7 +28,7 @@ class _HomePageState extends State<HomePage> {
     final response = await http.get(
         // ignore: prefer_interpolation_to_compose_strings
         Uri.parse("https://cylinder.eachut.com/sendmessage/" +
-            "${LoginGetStorage.getAPI()}/" +
+            "${GetSetStorage.getAPI()}/" +
             "${fromController.text}/" +
             "${toController.text}/" +
             "${messageController.text}"),
@@ -39,8 +37,6 @@ class _HomePageState extends State<HomePage> {
           'Accept': 'application/json',
         });
     var value = json.decode(response.body);
-    print("dajkgsfuyadsbivfuydsavf");
-    print(value);
     if (value["success"] = true) {
       Helper.DialogueHelper(context, value["message"]);
       messageController.clear();
@@ -61,6 +57,14 @@ class _HomePageState extends State<HomePage> {
   TextEditingController messageController = TextEditingController();
   TextEditingController apiController = TextEditingController();
   bool isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    fromController.text = GetSetStorage.getFrom();
+    toController.text = GetSetStorage.getTo();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -492,7 +496,7 @@ class _HomePageState extends State<HomePage> {
                                                         height: 20,
                                                       ),
                                                       InkWell(
-                                                          onTap: LoginGetStorage
+                                                          onTap: GetSetStorage
                                                                           .getAPI()
                                                                       .toString() ==
                                                                   ""
@@ -545,7 +549,6 @@ class _HomePageState extends State<HomePage> {
                                                                                     ),
                                                                                     TextFormField(
                                                                                       validator: (value) {
-                                                                                        print(value);
                                                                                         if (value!.isEmpty) {
                                                                                           return "Enter token";
                                                                                         }
@@ -598,6 +601,12 @@ class _HomePageState extends State<HomePage> {
                                                                   });
                                                                 }
                                                               : () async {
+                                                                  GetSetStorage.setFrom(
+                                                                      fromController
+                                                                          .text);
+                                                                  GetSetStorage.setTo(
+                                                                      toController
+                                                                          .text);
                                                                   if (_formKey
                                                                       .currentState!
                                                                       .validate()) {
@@ -624,7 +633,7 @@ class _HomePageState extends State<HomePage> {
                                                                       ScaffoldMessenger.of(
                                                                               context)
                                                                           .showSnackBar(
-                                                                              SnackBar(
+                                                                              const SnackBar(
                                                                         content:
                                                                             Text("No Internet Connection"),
                                                                       ));
@@ -709,7 +718,7 @@ class _HomePageState extends State<HomePage> {
             child: IconButton(
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ProfilePage()));
+                    MaterialPageRoute(builder: (context) => const ProfilePage()));
                 /*  showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -823,31 +832,17 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Positioned(
-            right: 130,
+            left: 30,
             top: 50,
             child: IconButton(
               onPressed: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => documentationPage()));
+                        builder: (context) => const documentationPage()));
               },
               icon: const Icon(
                 Icons.code,
-                color: Color(0xFFFFECAF),
-              ),
-            ),
-          ),
-          Positioned(
-            right: 80,
-            top: 50,
-            child: IconButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => EmailScreen()));
-              },
-              icon: const Icon(
-                Icons.card_giftcard_rounded,
                 color: Color(0xFFFFECAF),
               ),
             ),
