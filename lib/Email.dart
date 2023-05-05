@@ -1,22 +1,22 @@
-import 'dart:convert';
-import 'dart:developer';
+// ignore_for_file: file_names, no_leading_underscores_for_local_identifiers, use_build_context_synchronously
+
 import 'dart:io';
 import 'dart:ui';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
 
-import 'package:get_storage/get_storage.dart';
-import 'package:mysparrowsms/utlis/imageView.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-import 'utlis/dialogue.dart';
+import 'model/tokenRequest_model.dart';
+import 'utlis/apiServices.dart';
 import 'utlis/imageFileView.dart';
 import 'utlis/image_utils.dart';
 
 class EmailScreen extends StatefulWidget {
-  EmailScreen({
+  const EmailScreen({
     super.key,
   });
 
@@ -41,71 +41,171 @@ class _EmailScreenState extends State<EmailScreen> {
   TextEditingController websiteApplicationController = TextEditingController();
   TextEditingController requirementController = TextEditingController();
 
-  sendMail() async {
+//using pub for ios and android only
+  /* sendEmail() async {
+    // Note that using a username and password for gmail only works if
+    // you have two-factor authentication enabled and created an App password.
+    // Search for "gmail app password 2fa"
+    // The alternative is to use oauth.
+    String username = 'roshansah729@gmail.com';
+    String password = 'eohdnghabjcahzyt';
+
+    final smtpServer = gmail(username, password);
+    // Use the SmtpServer class to configure an SMTP server:
+    // final smtpServer = SmtpServer('smtp.domain.com');
+    // See the named arguments of SmtpServer for further configuration
+    // options.
+
+    // Create our message.
+    final message = Message()
+      ..from = Address(username, 'Sparrow SMS')
+      ..recipients.add('admin@eachut.com')
+      ..subject = 'Test Dart Mailer library :: 😀 :: ${DateTime.now()}'
+      ..text = 'This is the plain text.\nThis is line 2 of the text part.'
+      ..html = "<h1>Test</h1>\n<p>Hey! Here's some HTML content</p>"
+      ..attachments = [
+        if (photo != null)
+          FileAttachment(photo!)
+            ..location = Location.inline
+            ..cid = '<CitizenFront@3.141>',
+        if (photo1 != null)
+          FileAttachment(photo1!)
+            ..location = Location.inline
+            ..cid = '<CitizenBack@3.141>',
+        if (photo2 != null)
+          FileAttachment(photo2!)
+            ..location = Location.inline
+            ..cid = '<CompanyRegistration@3.141>',
+        if (photo3 != null)
+          FileAttachment(photo3!)
+            ..location = Location.inline
+            ..cid = '<CompanyPANvat@3.141>'
+      ];
+
+    try {
+      final sendReport = await send(message, smtpServer);
+      print('Message sent: ' + sendReport.toString());
+    } on MailerException catch (e) {
+      print('Message not sent.');
+      for (var p in e.problems) {
+        print('Problem: ${p.code}: ${p.msg}');
+      }
+    }
+    // DONE
+  }
+ */
+
+//sending mail using api
+  sendMailApi() async {
     setState(() {
-      _apiMessage = "";
       _isLoading = true;
     });
-
-//send mail
-    final serviceId = 'service_y519dl3';
-    final templateId = 'template_hjk1rij';
-    final userId = 'fkSUEudS6hQLPn0tK';
-    final accessToken = 'TByGNE7zMmLTxGnMseDTg';
-    final url = Uri.parse('https://api.emailjs.com/api/v1.0/email/send');
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'service_id': serviceId,
-        'template_id': templateId,
-        'accessToken': accessToken,
-        'user_id': userId,
-        'template_params': {
-          'reply_to': 'admin@eachut.com',
-          'from_name': nameController.text,
-          'message':
-              "Name:${nameController.text} \nPhone:${phoneController.text} \nNote:${requirementController.text}  \n",
-        },
-      }),
+    TokenRequestModal tokenRequestModal = TokenRequestModal(
+      name: nameController.text,
+      phone: phoneController.text,
+      email: emailController.text,
+      companyName: companyNameController.text,
+      websiteApplication: websiteApplicationController.text,
+      requirement: requirementController.text,
+      citizenImageFront: photo,
+      citizenImageBack: photo1,
+      companyRegistration: photo2,
+      companyPanVat: photo3,
     );
-
-    print(response.body);
-
-    if (response.body == "OK") {
-//set storage
-      // final box = GetStorage();
-
-      // String receipt = ReciptDataGetStorage.getReciptData();
-      // print(receipt);
-      // String addToList =
-      //     "Name:${nameController.text} ^^Phone:${phoneController.text} ^^Note:${noteController.text} ^^${widget.image}.png//";
-      // String ReciptData = receipt + addToList;
-      // // String ReciptData = "";
-      // print(ReciptData);
-
-      // ReciptDataGetStorage.setReciptData(ReciptData);
-
-//snackbar
-      const snackBar = SnackBar(
-        content: Center(
-            child: Text(
-          'We will contact you soon!!!',
-          style: TextStyle(
-              color: Colors.blueGrey,
-              fontSize: 16,
-              fontWeight: FontWeight.bold),
-        )),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-      Navigator.pop(context);
-    } else {
-      setState(() {
-        _apiMessage = "";
-        _isLoading = false;
-      });
-    }
+    ApiService.addTokenRequest(tokenRequestModal).then((value) {
+      if (value["success"] == true) {
+        setState(() {
+          _isLoading = false;
+          nameController.clear();
+          phoneController.clear();
+          emailController.clear();
+          companyNameController.clear();
+          websiteApplicationController.clear();
+          requirementController.clear();
+          photo = null;
+          photo1 = null;
+          photo2 = null;
+          photo3 = null;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Center(
+              child: Text(
+            "Mail Send Success. We will contact you soon",
+            style: TextStyle(
+                color: Colors.blueGrey,
+                fontSize: 16,
+                fontWeight: FontWeight.bold),
+          )),
+        ));
+      } else {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                contentPadding: const EdgeInsets.all(30),
+                backgroundColor: Theme.of(context).secondaryHeaderColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                  side: BorderSide(color: Theme.of(context).primaryColor),
+                ),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "Email NOT SENT",
+                        style: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontFamily: "IMPACT",
+                            fontSize: 48),
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      _apiMessage,
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontFamily: "Sofia Pro",
+                          fontWeight: FontWeight.bold,
+                          fontSize: 28),
+                      textAlign: TextAlign.left,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: Container(
+                            width: 85,
+                            height: 85,
+                            padding: const EdgeInsets.all(30),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(30),
+                              color: Theme.of(context).primaryColor,
+                            ),
+                            child: Icon(
+                              Icons.cancel,
+                              color: Theme.of(context).secondaryHeaderColor,
+                            )),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            });
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    });
   }
 
   @override
@@ -218,12 +318,12 @@ class _EmailScreenState extends State<EmailScreen> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 8, right: 8, top: 100, bottom: 30),
+                              padding:
+                                  const EdgeInsets.only(top: 100, bottom: 30),
                               child: ListView(
                                 scrollDirection: Axis.horizontal,
                                 children: [
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 30,
                                   ),
                                   Center(
@@ -241,12 +341,12 @@ class _EmailScreenState extends State<EmailScreen> {
                                             MainAxisAlignment.center,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
-                                        children: [
+                                        children: const [
                                           Text(
                                             "RS 500",
                                             textAlign: TextAlign.center,
                                           ),
-                                          const SizedBox(
+                                          SizedBox(
                                             height: 15,
                                           ),
                                           Text(
@@ -262,7 +362,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 30,
                                   ),
                                   Center(
@@ -280,16 +380,16 @@ class _EmailScreenState extends State<EmailScreen> {
                                             MainAxisAlignment.center,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
-                                        children: [
+                                        children: const [
                                           Text(
-                                            "RS 500",
+                                            "RS 5000",
                                             textAlign: TextAlign.center,
                                           ),
-                                          const SizedBox(
+                                          SizedBox(
                                             height: 15,
                                           ),
                                           Text(
-                                            "500 Credit",
+                                            "5000 Credit",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 fontFamily: "Sofia_pro",
@@ -301,7 +401,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 30,
                                   ),
                                   Center(
@@ -319,16 +419,16 @@ class _EmailScreenState extends State<EmailScreen> {
                                             MainAxisAlignment.center,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
-                                        children: [
+                                        children: const [
                                           Text(
-                                            "RS 500",
+                                            "RS 10000",
                                             textAlign: TextAlign.center,
                                           ),
-                                          const SizedBox(
+                                          SizedBox(
                                             height: 15,
                                           ),
                                           Text(
-                                            "500 Credit",
+                                            "10000 Credit",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 fontFamily: "Sofia_pro",
@@ -340,7 +440,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: 30,
                                   ),
                                 ],
@@ -356,6 +456,7 @@ class _EmailScreenState extends State<EmailScreen> {
                         children: [
                           SizedBox(
                               height: MediaQuery.of(context).size.height,
+                              width: MediaQuery.of(context).size.width,
                               child: Image.asset(
                                 "./assets/sms.png",
                                 fit: BoxFit.cover,
@@ -466,7 +567,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                         }
                                                         return null;
                                                       },
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           color: Colors.black),
                                                       keyboardType:
                                                           TextInputType.name,
@@ -486,7 +587,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                   color: Colors
                                                                       .black),
                                                         ),
-                                                        icon: const Icon(
+                                                        icon: Icon(
                                                           Icons.person,
                                                           color: Colors.black,
                                                         ),
@@ -513,7 +614,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                         }
                                                         return null;
                                                       },
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           color: Colors.black),
                                                       keyboardType:
                                                           TextInputType.phone,
@@ -533,7 +634,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                   color: Colors
                                                                       .black),
                                                         ),
-                                                        icon: const Icon(
+                                                        icon: Icon(
                                                           Icons.phone,
                                                           color: Colors.black,
                                                         ),
@@ -560,7 +661,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                         }
                                                         return null;
                                                       },
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           color: Colors.black),
                                                       keyboardType:
                                                           TextInputType
@@ -581,7 +682,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                   color: Colors
                                                                       .black),
                                                         ),
-                                                        icon: const Icon(
+                                                        icon: Icon(
                                                           Icons.email,
                                                           color: Colors.black,
                                                         ),
@@ -608,7 +709,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                         }
                                                         return null;
                                                       },
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           color: Colors.black),
                                                       keyboardType:
                                                           TextInputType.phone,
@@ -628,7 +729,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                   color: Colors
                                                                       .black),
                                                         ),
-                                                        icon: const Icon(
+                                                        icon: Icon(
                                                           Icons.location_city,
                                                           color: Colors.black,
                                                         ),
@@ -656,7 +757,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                         }
                                                         return null;
                                                       },
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           color: Colors.black),
                                                       keyboardType:
                                                           TextInputType.phone,
@@ -676,7 +777,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                   color: Colors
                                                                       .black),
                                                         ),
-                                                        icon: const Icon(
+                                                        icon: Icon(
                                                           Icons.web,
                                                           color: Colors.black,
                                                         ),
@@ -705,7 +806,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                         return null;
                                                       },
                                                       maxLines: 3,
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           color: Colors.black),
                                                       keyboardType:
                                                           TextInputType.text,
@@ -725,7 +826,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                   color: Colors
                                                                       .black),
                                                         ),
-                                                        icon: const Icon(
+                                                        icon: Icon(
                                                           Icons.note,
                                                           color: Colors.black,
                                                         ),
@@ -823,7 +924,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                       }
                                                                                       Navigator.pop(context);
                                                                                     },
-                                                                                    child: ListTile(
+                                                                                    child: const ListTile(
                                                                                       leading: Icon(
                                                                                         Icons.camera,
                                                                                         color: Colors.black,
@@ -849,7 +950,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                       }
                                                                                       Navigator.pop(context);
                                                                                     },
-                                                                                    child: ListTile(
+                                                                                    child: const ListTile(
                                                                                       leading: Icon(
                                                                                         Icons.photo_album,
                                                                                         color: Colors.black,
@@ -867,18 +968,22 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                 ? Stack(
                                                                     children: [
                                                                       ClipRRect(
-                                                                          borderRadius: BorderRadius.circular(
-                                                                              30),
-                                                                          child:
-                                                                              Image.file(
-                                                                            photo!,
-                                                                            fit:
-                                                                                BoxFit.cover,
-                                                                            height:
-                                                                                100,
-                                                                            width:
-                                                                                300,
-                                                                          )),
+                                                                        borderRadius:
+                                                                            BorderRadius.circular(30),
+                                                                        child: kIsWeb
+                                                                            ? Image.network(
+                                                                                photo!.path,
+                                                                                fit: BoxFit.cover,
+                                                                                height: 100,
+                                                                                width: 300,
+                                                                              )
+                                                                            : Image.file(
+                                                                                photo!,
+                                                                                fit: BoxFit.cover,
+                                                                                height: 100,
+                                                                                width: 300,
+                                                                              ),
+                                                                      ),
                                                                       Positioned(
                                                                           right:
                                                                               5,
@@ -899,9 +1004,9 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                     ],
                                                                   )
                                                                 : Row(
-                                                                    children: [
+                                                                    children: const [
                                                                       Padding(
-                                                                          padding: const EdgeInsets.only(
+                                                                          padding: EdgeInsets.only(
                                                                               left:
                                                                                   40),
                                                                           child:
@@ -909,7 +1014,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                       Expanded(
                                                                         child:
                                                                             Padding(
-                                                                          padding: const EdgeInsets.only(
+                                                                          padding: EdgeInsets.only(
                                                                               left: 30,
                                                                               right: 30),
                                                                           child:
@@ -981,7 +1086,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                           }
                                                                                           Navigator.pop(context);
                                                                                         },
-                                                                                        child: ListTile(
+                                                                                        child: const ListTile(
                                                                                           leading: Icon(
                                                                                             Icons.camera,
                                                                                             color: Colors.black,
@@ -1007,7 +1112,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                           }
                                                                                           Navigator.pop(context);
                                                                                         },
-                                                                                        child: ListTile(
+                                                                                        child: const ListTile(
                                                                                           leading: Icon(
                                                                                             Icons.photo_album,
                                                                                             color: Colors.black,
@@ -1026,13 +1131,22 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                     ? Stack(
                                                                         children: [
                                                                           ClipRRect(
-                                                                              borderRadius: BorderRadius.circular(30),
-                                                                              child: Image.file(
-                                                                                photo1!,
-                                                                                fit: BoxFit.cover,
-                                                                                height: 100,
-                                                                                width: 300,
-                                                                              )),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(30),
+                                                                            child: kIsWeb
+                                                                                ? Image.network(
+                                                                                    photo1!.path,
+                                                                                    fit: BoxFit.cover,
+                                                                                    height: 100,
+                                                                                    width: 300,
+                                                                                  )
+                                                                                : Image.file(
+                                                                                    photo1!,
+                                                                                    fit: BoxFit.cover,
+                                                                                    height: 100,
+                                                                                    width: 300,
+                                                                                  ),
+                                                                          ),
                                                                           Positioned(
                                                                               right: 5,
                                                                               child: IconButton(
@@ -1049,14 +1163,14 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                         ],
                                                                       )
                                                                     : Row(
-                                                                        children: [
+                                                                        children: const [
                                                                           Padding(
-                                                                              padding: const EdgeInsets.only(left: 40),
+                                                                              padding: EdgeInsets.only(left: 40),
                                                                               child: Icon(Icons.upload)),
                                                                           Expanded(
                                                                             child:
                                                                                 Padding(
-                                                                              padding: const EdgeInsets.only(left: 30, right: 30),
+                                                                              padding: EdgeInsets.only(left: 30, right: 30),
                                                                               child: Text(
                                                                                 "Add Citizenship Back Image",
                                                                                 textAlign: TextAlign.left,
@@ -1120,7 +1234,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                           }
                                                                                           Navigator.pop(context);
                                                                                         },
-                                                                                        child: ListTile(
+                                                                                        child: const ListTile(
                                                                                           leading: Icon(
                                                                                             Icons.camera,
                                                                                             color: Colors.black,
@@ -1146,7 +1260,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                           }
                                                                                           Navigator.pop(context);
                                                                                         },
-                                                                                        child: ListTile(
+                                                                                        child: const ListTile(
                                                                                           leading: Icon(
                                                                                             Icons.photo_album,
                                                                                             color: Colors.black,
@@ -1165,13 +1279,22 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                     ? Stack(
                                                                         children: [
                                                                           ClipRRect(
-                                                                              borderRadius: BorderRadius.circular(30),
-                                                                              child: Image.file(
-                                                                                photo2!,
-                                                                                fit: BoxFit.cover,
-                                                                                height: 100,
-                                                                                width: 300,
-                                                                              )),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(30),
+                                                                            child: kIsWeb
+                                                                                ? Image.network(
+                                                                                    photo2!.path,
+                                                                                    fit: BoxFit.cover,
+                                                                                    height: 100,
+                                                                                    width: 300,
+                                                                                  )
+                                                                                : Image.file(
+                                                                                    photo2!,
+                                                                                    fit: BoxFit.cover,
+                                                                                    height: 100,
+                                                                                    width: 300,
+                                                                                  ),
+                                                                          ),
                                                                           Positioned(
                                                                               right: 5,
                                                                               child: IconButton(
@@ -1188,14 +1311,14 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                         ],
                                                                       )
                                                                     : Row(
-                                                                        children: [
+                                                                        children: const [
                                                                           Padding(
-                                                                              padding: const EdgeInsets.only(left: 40),
+                                                                              padding: EdgeInsets.only(left: 40),
                                                                               child: Icon(Icons.upload)),
                                                                           Expanded(
                                                                             child:
                                                                                 Padding(
-                                                                              padding: const EdgeInsets.only(left: 30, right: 30),
+                                                                              padding: EdgeInsets.only(left: 30, right: 30),
                                                                               child: Text(
                                                                                 "Add Company Registration Image",
                                                                                 textAlign: TextAlign.left,
@@ -1259,7 +1382,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                           }
                                                                                           Navigator.pop(context);
                                                                                         },
-                                                                                        child: ListTile(
+                                                                                        child: const ListTile(
                                                                                           leading: Icon(
                                                                                             Icons.camera,
                                                                                             color: Colors.black,
@@ -1285,7 +1408,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                           }
                                                                                           Navigator.pop(context);
                                                                                         },
-                                                                                        child: ListTile(
+                                                                                        child: const ListTile(
                                                                                           leading: Icon(
                                                                                             Icons.photo_album,
                                                                                             color: Colors.black,
@@ -1304,13 +1427,22 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                     ? Stack(
                                                                         children: [
                                                                           ClipRRect(
-                                                                              borderRadius: BorderRadius.circular(30),
-                                                                              child: Image.file(
-                                                                                photo3!,
-                                                                                fit: BoxFit.cover,
-                                                                                height: 100,
-                                                                                width: 300,
-                                                                              )),
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(30),
+                                                                            child: kIsWeb
+                                                                                ? Image.network(
+                                                                                    photo3!.path,
+                                                                                    fit: BoxFit.cover,
+                                                                                    height: 100,
+                                                                                    width: 300,
+                                                                                  )
+                                                                                : Image.file(
+                                                                                    photo3!,
+                                                                                    fit: BoxFit.cover,
+                                                                                    height: 100,
+                                                                                    width: 300,
+                                                                                  ),
+                                                                          ),
                                                                           Positioned(
                                                                               right: 5,
                                                                               child: IconButton(
@@ -1327,14 +1459,14 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                         ],
                                                                       )
                                                                     : Row(
-                                                                        children: [
+                                                                        children: const [
                                                                           Padding(
-                                                                              padding: const EdgeInsets.only(left: 40),
+                                                                              padding: EdgeInsets.only(left: 40),
                                                                               child: Icon(Icons.upload)),
                                                                           Expanded(
                                                                             child:
                                                                                 Padding(
-                                                                              padding: const EdgeInsets.only(left: 30, right: 30),
+                                                                              padding: EdgeInsets.only(left: 30, right: 30),
                                                                               child: Text(
                                                                                 "Add Company PAN/VAT Image",
                                                                                 textAlign: TextAlign.left,
@@ -1351,7 +1483,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                         ),
                                                       ],
                                                     ),
-                                                    SizedBox(
+                                                    const SizedBox(
                                                       height: 50,
                                                     ),
                                                     InkWell(
@@ -1362,7 +1494,6 @@ class _EmailScreenState extends State<EmailScreen> {
                                                       onTap: _isLoading
                                                           ? () {}
                                                           : () async {
-                                                              print("object2");
                                                               setState(() {
                                                                 _apiMessage =
                                                                     "";
@@ -1379,10 +1510,12 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                     connectivityResult ==
                                                                         ConnectivityResult
                                                                             .wifi) {
-                                                                  sendMail();
+                                                                  sendMailApi();
                                                                 } else {
+                                                                  // ignore: avoid_print
                                                                   print(
-                                                                      "no wifi");
+                                                                      "No Internet Connection");
+                                                                  // ignore: unused_local_variable
                                                                   const snackBar =
                                                                       SnackBar(
                                                                     content:
@@ -1407,46 +1540,61 @@ class _EmailScreenState extends State<EmailScreen> {
                                                         width: 180,
                                                         decoration:
                                                             BoxDecoration(
-                                                          color: Color.fromARGB(
+                                                          color: const Color
+                                                                  .fromARGB(
                                                               255, 63, 86, 98),
                                                           borderRadius:
                                                               BorderRadius
                                                                   .circular(25),
                                                           boxShadow: [
                                                             BoxShadow(
-                                                              color: Color
-                                                                      .fromARGB(
-                                                                          255,
-                                                                          63,
-                                                                          86,
-                                                                          98)
+                                                              color: const Color
+                                                                          .fromARGB(
+                                                                      255,
+                                                                      63,
+                                                                      86,
+                                                                      98)
                                                                   .withOpacity(
                                                                       0.2),
                                                               spreadRadius: 1,
                                                               blurRadius: 2,
-                                                              offset: Offset(0,
+                                                              offset: const Offset(
+                                                                  0,
                                                                   1), // changes position of shadow
                                                             ),
                                                           ],
                                                         ),
                                                         child: Center(
-                                                          child: Text(
-                                                            "Send"
-                                                                .toUpperCase(),
-                                                            style: GoogleFonts.lato(
-                                                                textStyle: Theme.of(
-                                                                        context)
-                                                                    .textTheme
-                                                                    .headlineSmall,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w600,
-                                                                color: Colors
-                                                                    .grey[50]),
-                                                          ),
+                                                          child: _isLoading
+                                                              ? LoadingAnimationWidget
+                                                                  .hexagonDots(
+                                                                  color: Colors
+                                                                      .white
+                                                                      .withOpacity(
+                                                                          0.7),
+                                                                  size: 25,
+                                                                )
+                                                              : Text(
+                                                                  "Send"
+                                                                      .toUpperCase(),
+                                                                  style: GoogleFonts.lato(
+                                                                      textStyle: Theme.of(
+                                                                              context)
+                                                                          .textTheme
+                                                                          .headlineSmall,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      color: Colors
+                                                                              .grey[
+                                                                          50]),
+                                                                ),
                                                         ),
                                                       ),
                                                     ),
+                                                    const SizedBox(
+                                                      height: 20,
+                                                    )
                                                   ],
                                                 ),
                                               ),

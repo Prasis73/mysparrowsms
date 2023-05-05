@@ -1,5 +1,5 @@
-name: mysparrowsms
-description: A new Flutter project.
+name: sparrowsms
+description: sparrow sms by Eachut.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
@@ -44,6 +44,9 @@ dependencies:
   dart_code_viewer2: ^1.0.1
   image_picker: ^0.8.7+4
   zoom_widget: ^0.2.0 #to zoom image
+  mailer: ^6.0.1 #for android ios
+  dio: ^4.0.6 #for calling api and image files
+  codeview: ^0.0.16
 
 dev_dependencies:
   flutter_test:

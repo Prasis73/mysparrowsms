@@ -1,6 +1,8 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:mysparrowsms/homePage.dart';
+import 'package:sparrowsms/homePage.dart';
 import 'package:onboarding/onboarding.dart';
 
 import 'getStorage.dart';
@@ -249,9 +251,9 @@ class _OnboardState extends State<Onboard> {
       child: InkWell(
         borderRadius: defaultProceedButtonBorderRadius,
         onTap: () {
-          LoginGetStorage.setOnboard(false);
+          GetSetStorage.setOnboard(false);
           Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => HomePage()));
+              context, MaterialPageRoute(builder: (context) => const HomePage()));
         },
         child: const Padding(
           padding: defaultProceedButtonPadding,
