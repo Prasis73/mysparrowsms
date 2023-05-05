@@ -123,7 +123,7 @@ class _documentationPageState extends State<documentationPage> {
                           height: 300,
                           width: MediaQuery.of(context).size.width,
                           child: Image.asset(
-                            "./assets/sms.png",
+                            "./assets/sms_banner.jpg",
                             fit: BoxFit.cover,
                           )),
                     ),
@@ -136,7 +136,7 @@ class _documentationPageState extends State<documentationPage> {
                             height: MediaQuery.of(context).size.height,
                             width: MediaQuery.of(context).size.width,
                             child: Image.asset(
-                              "./assets/sms.png",
+                              "./assets/sms_banner.jpg",
                               fit: BoxFit.cover,
                             )),
                         ClipRRect(
@@ -634,7 +634,7 @@ curl -s http://api.sparrowsms.com/v2/credit/ \
               },
               icon: const Icon(
                 Icons.arrow_back_ios,
-                color: Color(0xFFFFECAF),
+                color: Colors.black,
               ),
             ),
           ),

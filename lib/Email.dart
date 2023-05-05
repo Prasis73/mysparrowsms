@@ -313,7 +313,7 @@ class _EmailScreenState extends State<EmailScreen> {
                               height: 300,
                               width: MediaQuery.of(context).size.width,
                               child: Image.asset(
-                                "./assets/sms.png",
+                                "./assets/sms_banner.jpg",
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -343,14 +343,14 @@ class _EmailScreenState extends State<EmailScreen> {
                                             CrossAxisAlignment.center,
                                         children: const [
                                           Text(
-                                            "RS 500",
+                                            "RS 1300",
                                             textAlign: TextAlign.center,
                                           ),
                                           SizedBox(
                                             height: 15,
                                           ),
                                           Text(
-                                            "500 Credit",
+                                            "1000 Credit",
                                             textAlign: TextAlign.center,
                                             style: TextStyle(
                                                 fontFamily: "Sofia_pro",
@@ -382,7 +382,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                             CrossAxisAlignment.center,
                                         children: const [
                                           Text(
-                                            "RS 5000",
+                                            "RS 6000",
                                             textAlign: TextAlign.center,
                                           ),
                                           SizedBox(
@@ -421,7 +421,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                             CrossAxisAlignment.center,
                                         children: const [
                                           Text(
-                                            "RS 10000",
+                                            "RS 11000",
                                             textAlign: TextAlign.center,
                                           ),
                                           SizedBox(
@@ -458,7 +458,7 @@ class _EmailScreenState extends State<EmailScreen> {
                               height: MediaQuery.of(context).size.height,
                               width: MediaQuery.of(context).size.width,
                               child: Image.asset(
-                                "./assets/sms.png",
+                                "./assets/sms_banner.jpg",
                                 fit: BoxFit.cover,
                               )),
                           ClipRRect(
@@ -1622,7 +1622,7 @@ class _EmailScreenState extends State<EmailScreen> {
                 },
                 icon: const Icon(
                   Icons.arrow_back_ios,
-                  color: Color(0xFFFFECAF),
+                  color: Colors.black,
                 ),
               ),
             ),

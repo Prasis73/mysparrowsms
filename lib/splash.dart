@@ -35,6 +35,8 @@ class _SplashState extends State<Splash> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
                 colors: [
@@ -46,10 +48,10 @@ class _SplashState extends State<Splash> {
                 stops: [0.0, 1.0],
                 tileMode: TileMode.clamp),
           ),
-          child: Center(
-              child: Image.asset(
-            "./assets/logo.png",
-          ))),
+          child: Image.asset(
+            "./assets/logo.jpg",
+            fit: BoxFit.cover,
+          )),
     );
   }
 }

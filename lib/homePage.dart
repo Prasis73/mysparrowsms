@@ -162,13 +162,10 @@ class _HomePageState extends State<HomePage> {
                         height: 300,
                         width: MediaQuery.of(context).size.width,
                         child: Image.asset(
-                          "./assets/sms.png",
+                          "./assets/sms_banner.jpg",
                           fit: BoxFit.cover,
                         ),
-                        //     SvgPicture.asset(
-                        //   "./assets/topbanner.svg",
-                        //   fit: BoxFit.cover,
-                        // )
+                        
                       ),
                     ),
                   ),
@@ -180,7 +177,7 @@ class _HomePageState extends State<HomePage> {
                             height: MediaQuery.of(context).size.height,
                             width: MediaQuery.of(context).size.width,
                             child: Image.asset(
-                              "./assets/sms.png",
+                              "./assets/sms_banner.jpg",
                               fit: BoxFit.cover,
                             )),
                         ClipRRect(
@@ -717,8 +714,10 @@ class _HomePageState extends State<HomePage> {
             top: 50,
             child: IconButton(
               onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const ProfilePage()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ProfilePage()));
                 /*  showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -827,7 +826,7 @@ class _HomePageState extends State<HomePage> {
               },
               icon: const Icon(
                 Icons.api,
-                color: Color(0xFFFFECAF),
+                color: Colors.black,
               ),
             ),
           ),
@@ -843,7 +842,7 @@ class _HomePageState extends State<HomePage> {
               },
               icon: const Icon(
                 Icons.code,
-                color: Color(0xFFFFECAF),
+                color: Colors.black,
               ),
             ),
           ),
