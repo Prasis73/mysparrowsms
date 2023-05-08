@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:sparrowsms/homePage.dart';
 import 'package:onboarding/onboarding.dart';
 
@@ -41,68 +42,98 @@ class _OnboardState extends State<Onboard> {
                   height: 200,
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 45.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Sparrow SMS',
-                    style: pageTitleStyle,
+                    style: GoogleFonts.comfortaa(
+                      textStyle: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white),
+                    ),
                     textAlign: TextAlign.left,
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0, vertical: 10.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 45.0, vertical: 10.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Sparrow SMS is a leading VAS Provider based in Nepal. It currently provides SMS Gateway connectivity with the telecom operators of Nepal, currently supporting the following operators',
-                    style: pageInfoStyle,
+                    style: GoogleFonts.comfortaa(
+                      textStyle: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.white),
+                    ),
                     textAlign: TextAlign.left,
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0, vertical: 10.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 45.0, vertical: 10.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     '1. Nepal Telecom (GSM + CDMA).',
-                    style: pageInfoStyle,
+                    style: GoogleFonts.comfortaa(
+                      textStyle: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.white),
+                    ),
                     textAlign: TextAlign.left,
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0, vertical: 10.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 45.0, vertical: 10.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     '2. Ncell',
-                    style: pageInfoStyle,
+                    style: GoogleFonts.comfortaa(
+                      textStyle: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.white),
+                    ),
                     textAlign: TextAlign.left,
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0, vertical: 10.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 45.0, vertical: 10.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     '3. United Telecom',
-                    style: pageInfoStyle,
+                    style: GoogleFonts.comfortaa(
+                      textStyle: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.white),
+                    ),
                     textAlign: TextAlign.left,
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0, vertical: 10.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 45.0, vertical: 10.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     '4. Smart Telecom',
-                    style: pageInfoStyle,
+                    style: GoogleFonts.comfortaa(
+                      textStyle: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.white),
+                    ),
                     textAlign: TextAlign.left,
                   ),
                 ),
@@ -135,24 +166,34 @@ class _OnboardState extends State<Onboard> {
                   height: 300,
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 45.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Send SMS',
-                    style: pageTitleStyle,
+                    style: GoogleFonts.comfortaa(
+                      textStyle: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white),
+                    ),
                     textAlign: TextAlign.left,
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0, vertical: 10.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 45.0, vertical: 10.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Outgoing or Push or MT (Mobile Terminated) messages are sent from Sparrow SMS Gateway server to the intended recipients mobile phone.',
-                    style: pageInfoStyle,
+                    style: GoogleFonts.comfortaa(
+                      textStyle: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.white),
+                    ),
                     textAlign: TextAlign.left,
                   ),
                 ),
@@ -185,24 +226,34 @@ class _OnboardState extends State<Onboard> {
                   height: 300,
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 45.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'SMS Gateway & API',
-                    style: pageTitleStyle,
+                    style: GoogleFonts.comfortaa(
+                      textStyle: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white),
+                    ),
                     textAlign: TextAlign.left,
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 45.0, vertical: 10.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 45.0, vertical: 10.0),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Sparrow SMS provides you with an extremely comprehensive API. All the features of our web interface can be accessed via API.',
-                    style: pageInfoStyle,
+                    style: GoogleFonts.comfortaa(
+                      textStyle: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.white),
+                    ),
                     textAlign: TextAlign.left,
                   ),
                 ),

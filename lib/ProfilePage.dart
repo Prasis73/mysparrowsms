@@ -85,7 +85,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blueGrey,
+      backgroundColor: const Color.fromARGB(255, 255, 230, 196),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -235,10 +235,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                           textAlign: TextAlign.center,
                                           style: GoogleFonts.comfortaa(
                                             textStyle: const TextStyle(
-                                                fontSize: 40,
-                                                fontWeight: FontWeight.w900,
-                                                color: Color.fromARGB(
-                                                    255, 37, 0, 0)),
+                                              fontSize: 40,
+                                              fontWeight: FontWeight.w900,
+                                              color:
+                                                  Color.fromARGB(255, 37, 0, 0),
+                                            ),
                                           )),
                                     )),
                                     Center(
@@ -379,8 +380,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                         child:
                                                                             Text(
                                                                           responseMessage,
-                                                                          style:
-                                                                              const TextStyle(color: Colors.redAccent),
+                                                                          style:GoogleFonts.comfortaa(
+                                                                      textStyle: 
+                                                                              const TextStyle(color: Colors.redAccent),),
                                                                         ),
                                                                       ),
                                                                 const SizedBox(
@@ -520,7 +522,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
-                                                                  style: const TextStyle(
+                                                                  style: GoogleFonts.comfortaa(
+                                                                      textStyle: const TextStyle(
                                                                       fontFamily:
                                                                           "Sofia_pro",
                                                                       color: Colors
@@ -529,7 +532,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                           20,
                                                                       fontWeight:
                                                                           FontWeight
-                                                                              .w600),
+                                                                              .w600),),
                                                                 ),
                                                                 const SizedBox(
                                                                   height: 15,
@@ -539,7 +542,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
-                                                                  style: const TextStyle(
+                                                                  style:GoogleFonts.comfortaa(
+                                                                      textStyle:  const TextStyle(
                                                                       fontFamily:
                                                                           "Sofia_pro",
                                                                       color: Colors
@@ -548,7 +552,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                           14,
                                                                       fontWeight:
                                                                           FontWeight
-                                                                              .w400),
+                                                                              .w400),),
                                                                 ),
                                                                 const SizedBox(
                                                                   height: 5,
@@ -558,7 +562,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
-                                                                  style: const TextStyle(
+                                                                  style:GoogleFonts.comfortaa(
+                                                                      textStyle:  const TextStyle(
                                                                       fontFamily:
                                                                           "Sofia_pro",
                                                                       color: Colors
@@ -567,7 +572,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                           14,
                                                                       fontWeight:
                                                                           FontWeight
-                                                                              .w400),
+                                                                              .w400),)
                                                                 ),
                                                                 const SizedBox(
                                                                   height: 5,
@@ -577,7 +582,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
-                                                                  style: const TextStyle(
+                                                                  style: GoogleFonts.comfortaa(
+                                                                      textStyle: const TextStyle(
                                                                       fontFamily:
                                                                           "Sofia_pro",
                                                                       color: Colors
@@ -586,7 +592,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                           14,
                                                                       fontWeight:
                                                                           FontWeight
-                                                                              .w400),
+                                                                              .w400),),
                                                                 ),
                                                                 const SizedBox(
                                                                   height: 25,

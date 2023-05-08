@@ -479,6 +479,9 @@ using System.Collections.Specialized;
                                                                         .white,
                                                                 title: 'Curl',
                                                               ),
+                                                              SizedBox(
+                                                                height: 20,
+                                                              )
                                                             ],
                                                           ),
                                                           ListView(
@@ -603,6 +606,9 @@ curl -s http://api.sparrowsms.com/v2/credit/ \
                                                                         .white,
                                                                 title: 'Curl',
                                                               ),
+                                                              SizedBox(
+                                                                height: 20,
+                                                              )
                                                             ],
                                                           ),
                                                         ],

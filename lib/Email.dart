@@ -127,14 +127,16 @@ class _EmailScreenState extends State<EmailScreen> {
           photo2 = null;
           photo3 = null;
         });
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Center(
               child: Text(
             "Mail Send Success. We will contact you soon",
-            style: TextStyle(
-                color: Colors.blueGrey,
-                fontSize: 16,
-                fontWeight: FontWeight.bold),
+            style: GoogleFonts.comfortaa(
+              textStyle: const TextStyle(
+                  color: Colors.blueGrey,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold),
+            ),
           )),
         ));
       } else {
@@ -155,10 +157,12 @@ class _EmailScreenState extends State<EmailScreen> {
                       alignment: Alignment.topLeft,
                       child: Text(
                         "Email NOT SENT",
-                        style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontFamily: "IMPACT",
-                            fontSize: 48),
+                        style: GoogleFonts.comfortaa(
+                          textStyle: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontFamily: "IMPACT",
+                              fontSize: 48),
+                        ),
                         textAlign: TextAlign.left,
                       ),
                     ),
@@ -167,11 +171,13 @@ class _EmailScreenState extends State<EmailScreen> {
                     ),
                     Text(
                       _apiMessage,
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontFamily: "Sofia Pro",
-                          fontWeight: FontWeight.bold,
-                          fontSize: 28),
+                      style: GoogleFonts.comfortaa(
+                        textStyle: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                            fontFamily: "Sofia Pro",
+                            fontWeight: FontWeight.bold,
+                            fontSize: 28),
+                      ),
                       textAlign: TextAlign.left,
                     ),
                     const SizedBox(
@@ -213,7 +219,7 @@ class _EmailScreenState extends State<EmailScreen> {
     return Form(
       key: _formKey,
       child: Scaffold(
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: const Color.fromARGB(255, 255, 230, 196),
         body: Stack(
           children: [
             SingleChildScrollView(
@@ -341,22 +347,31 @@ class _EmailScreenState extends State<EmailScreen> {
                                             MainAxisAlignment.center,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
-                                        children: const [
+                                        children: [
                                           Text(
                                             "RS 1300",
+                                            style: GoogleFonts.comfortaa(
+                                              textStyle: const TextStyle(
+                                                  fontFamily: "Sofia_pro",
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w400),
+                                            ),
                                             textAlign: TextAlign.center,
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             height: 15,
                                           ),
                                           Text(
                                             "1000 Credit",
                                             textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontFamily: "Sofia_pro",
-                                                color: Colors.black,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w400),
+                                            style: GoogleFonts.comfortaa(
+                                              textStyle: const TextStyle(
+                                                  fontFamily: "Sofia_pro",
+                                                  color: Colors.black,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w400),
+                                            ),
                                           )
                                         ],
                                       ),
@@ -380,22 +395,31 @@ class _EmailScreenState extends State<EmailScreen> {
                                             MainAxisAlignment.center,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
-                                        children: const [
+                                        children: [
                                           Text(
                                             "RS 6000",
+                                            style: GoogleFonts.comfortaa(
+                                              textStyle: const TextStyle(
+                                                  fontFamily: "Sofia_pro",
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w400),
+                                            ),
                                             textAlign: TextAlign.center,
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             height: 15,
                                           ),
                                           Text(
                                             "5000 Credit",
                                             textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontFamily: "Sofia_pro",
-                                                color: Colors.black,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w400),
+                                            style: GoogleFonts.comfortaa(
+                                              textStyle: const TextStyle(
+                                                  fontFamily: "Sofia_pro",
+                                                  color: Colors.black,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w400),
+                                            ),
                                           )
                                         ],
                                       ),
@@ -419,22 +443,31 @@ class _EmailScreenState extends State<EmailScreen> {
                                             MainAxisAlignment.center,
                                         crossAxisAlignment:
                                             CrossAxisAlignment.center,
-                                        children: const [
+                                        children: [
                                           Text(
                                             "RS 11000",
+                                            style: GoogleFonts.comfortaa(
+                                              textStyle: const TextStyle(
+                                                  fontFamily: "Sofia_pro",
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w400),
+                                            ),
                                             textAlign: TextAlign.center,
                                           ),
-                                          SizedBox(
+                                          const SizedBox(
                                             height: 15,
                                           ),
                                           Text(
                                             "10000 Credit",
                                             textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontFamily: "Sofia_pro",
-                                                color: Colors.black,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.w400),
+                                            style: GoogleFonts.comfortaa(
+                                              textStyle: const TextStyle(
+                                                  fontFamily: "Sofia_pro",
+                                                  color: Colors.black,
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w400),
+                                            ),
                                           )
                                         ],
                                       ),
@@ -848,15 +881,18 @@ class _EmailScreenState extends State<EmailScreen> {
                                                     const SizedBox(
                                                       height: 25,
                                                     ),
-                                                    const Text(
+                                                    Text(
                                                       "Documents are required",
                                                       textAlign:
                                                           TextAlign.start,
-                                                      style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        fontSize: 20,
-                                                        color: Colors.black,
+                                                      style:
+                                                          GoogleFonts.comfortaa(
+                                                        textStyle: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontSize: 20,
+                                                          color: Colors.black,
+                                                        ),
                                                       ),
                                                     ),
                                                     const SizedBox(
@@ -924,15 +960,17 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                       }
                                                                                       Navigator.pop(context);
                                                                                     },
-                                                                                    child: const ListTile(
-                                                                                      leading: Icon(
+                                                                                    child: ListTile(
+                                                                                      leading: const Icon(
                                                                                         Icons.camera,
                                                                                         color: Colors.black,
                                                                                       ),
                                                                                       title: Text(
                                                                                         "Camera",
-                                                                                        style: TextStyle(
-                                                                                          color: Colors.black,
+                                                                                        style: GoogleFonts.comfortaa(
+                                                                                          textStyle: const TextStyle(
+                                                                                            color: Colors.black,
+                                                                                          ),
                                                                                         ),
                                                                                       ),
                                                                                     ),
@@ -950,12 +988,12 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                       }
                                                                                       Navigator.pop(context);
                                                                                     },
-                                                                                    child: const ListTile(
-                                                                                      leading: Icon(
+                                                                                    child: ListTile(
+                                                                                      leading: const Icon(
                                                                                         Icons.photo_album,
                                                                                         color: Colors.black,
                                                                                       ),
-                                                                                      title: Text("Gallery", style: TextStyle(color: Colors.black)),
+                                                                                      title: Text("Gallery", style: GoogleFonts.comfortaa(textStyle: const TextStyle(color: Colors.black))),
                                                                                     ),
                                                                                   )
                                                                                 ],
@@ -1004,8 +1042,8 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                     ],
                                                                   )
                                                                 : Row(
-                                                                    children: const [
-                                                                      Padding(
+                                                                    children: [
+                                                                      const Padding(
                                                                           padding: EdgeInsets.only(
                                                                               left:
                                                                                   40),
@@ -1014,7 +1052,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                       Expanded(
                                                                         child:
                                                                             Padding(
-                                                                          padding: EdgeInsets.only(
+                                                                          padding: const EdgeInsets.only(
                                                                               left: 30,
                                                                               right: 30),
                                                                           child:
@@ -1022,11 +1060,10 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                             "Add Citizenship Front Image",
                                                                             textAlign:
                                                                                 TextAlign.left,
-                                                                            style: TextStyle(
-                                                                                fontFamily: "Sofia_pro",
-                                                                                color: Colors.black,
-                                                                                fontSize: 20,
-                                                                                fontWeight: FontWeight.w400),
+                                                                            style:
+                                                                                GoogleFonts.comfortaa(
+                                                                              textStyle: const TextStyle(fontFamily: "Sofia_pro", color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
+                                                                            ),
                                                                           ),
                                                                         ),
                                                                       )
@@ -1086,15 +1123,17 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                           }
                                                                                           Navigator.pop(context);
                                                                                         },
-                                                                                        child: const ListTile(
-                                                                                          leading: Icon(
+                                                                                        child: ListTile(
+                                                                                          leading: const Icon(
                                                                                             Icons.camera,
                                                                                             color: Colors.black,
                                                                                           ),
                                                                                           title: Text(
                                                                                             "Camera",
-                                                                                            style: TextStyle(
-                                                                                              color: Colors.black,
+                                                                                            style: GoogleFonts.comfortaa(
+                                                                                              textStyle: const TextStyle(
+                                                                                                color: Colors.black,
+                                                                                              ),
                                                                                             ),
                                                                                           ),
                                                                                         ),
@@ -1112,12 +1151,12 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                           }
                                                                                           Navigator.pop(context);
                                                                                         },
-                                                                                        child: const ListTile(
-                                                                                          leading: Icon(
+                                                                                        child: ListTile(
+                                                                                          leading: const Icon(
                                                                                             Icons.photo_album,
                                                                                             color: Colors.black,
                                                                                           ),
-                                                                                          title: Text("Gallery", style: TextStyle(color: Colors.black)),
+                                                                                          title: Text("Gallery", style: GoogleFonts.comfortaa(textStyle: const TextStyle(color: Colors.black))),
                                                                                         ),
                                                                                       )
                                                                                     ],
@@ -1163,18 +1202,20 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                         ],
                                                                       )
                                                                     : Row(
-                                                                        children: const [
-                                                                          Padding(
+                                                                        children: [
+                                                                          const Padding(
                                                                               padding: EdgeInsets.only(left: 40),
                                                                               child: Icon(Icons.upload)),
                                                                           Expanded(
                                                                             child:
                                                                                 Padding(
-                                                                              padding: EdgeInsets.only(left: 30, right: 30),
+                                                                              padding: const EdgeInsets.only(left: 30, right: 30),
                                                                               child: Text(
                                                                                 "Add Citizenship Back Image",
                                                                                 textAlign: TextAlign.left,
-                                                                                style: TextStyle(fontFamily: "Sofia_pro", color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
+                                                                                style: GoogleFonts.comfortaa(
+                                                                                  textStyle: const TextStyle(fontFamily: "Sofia_pro", color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
+                                                                                ),
                                                                               ),
                                                                             ),
                                                                           )
@@ -1234,15 +1275,17 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                           }
                                                                                           Navigator.pop(context);
                                                                                         },
-                                                                                        child: const ListTile(
-                                                                                          leading: Icon(
+                                                                                        child: ListTile(
+                                                                                          leading: const Icon(
                                                                                             Icons.camera,
                                                                                             color: Colors.black,
                                                                                           ),
                                                                                           title: Text(
                                                                                             "Camera",
-                                                                                            style: TextStyle(
-                                                                                              color: Colors.black,
+                                                                                            style: GoogleFonts.comfortaa(
+                                                                                              textStyle: const TextStyle(
+                                                                                                color: Colors.black,
+                                                                                              ),
                                                                                             ),
                                                                                           ),
                                                                                         ),
@@ -1260,12 +1303,12 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                           }
                                                                                           Navigator.pop(context);
                                                                                         },
-                                                                                        child: const ListTile(
-                                                                                          leading: Icon(
+                                                                                        child: ListTile(
+                                                                                          leading: const Icon(
                                                                                             Icons.photo_album,
                                                                                             color: Colors.black,
                                                                                           ),
-                                                                                          title: Text("Gallery", style: TextStyle(color: Colors.black)),
+                                                                                          title: Text("Gallery", style: GoogleFonts.comfortaa(textStyle: const TextStyle(color: Colors.black))),
                                                                                         ),
                                                                                       )
                                                                                     ],
@@ -1311,18 +1354,20 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                         ],
                                                                       )
                                                                     : Row(
-                                                                        children: const [
-                                                                          Padding(
+                                                                        children: [
+                                                                          const Padding(
                                                                               padding: EdgeInsets.only(left: 40),
                                                                               child: Icon(Icons.upload)),
                                                                           Expanded(
                                                                             child:
                                                                                 Padding(
-                                                                              padding: EdgeInsets.only(left: 30, right: 30),
+                                                                              padding: const EdgeInsets.only(left: 30, right: 30),
                                                                               child: Text(
                                                                                 "Add Company Registration Image",
                                                                                 textAlign: TextAlign.left,
-                                                                                style: TextStyle(fontFamily: "Sofia_pro", color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
+                                                                                style: GoogleFonts.comfortaa(
+                                                                                  textStyle: const TextStyle(fontFamily: "Sofia_pro", color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
+                                                                                ),
                                                                               ),
                                                                             ),
                                                                           )
@@ -1382,15 +1427,17 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                           }
                                                                                           Navigator.pop(context);
                                                                                         },
-                                                                                        child: const ListTile(
-                                                                                          leading: Icon(
+                                                                                        child: ListTile(
+                                                                                          leading: const Icon(
                                                                                             Icons.camera,
                                                                                             color: Colors.black,
                                                                                           ),
                                                                                           title: Text(
                                                                                             "Camera",
-                                                                                            style: TextStyle(
-                                                                                              color: Colors.black,
+                                                                                            style: GoogleFonts.comfortaa(
+                                                                                              textStyle: const TextStyle(
+                                                                                                color: Colors.black,
+                                                                                              ),
                                                                                             ),
                                                                                           ),
                                                                                         ),
@@ -1408,12 +1455,12 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                           }
                                                                                           Navigator.pop(context);
                                                                                         },
-                                                                                        child: const ListTile(
-                                                                                          leading: Icon(
+                                                                                        child: ListTile(
+                                                                                          leading: const Icon(
                                                                                             Icons.photo_album,
                                                                                             color: Colors.black,
                                                                                           ),
-                                                                                          title: Text("Gallery", style: TextStyle(color: Colors.black)),
+                                                                                          title: Text("Gallery", style: GoogleFonts.comfortaa(textStyle: const TextStyle(color: Colors.black))),
                                                                                         ),
                                                                                       )
                                                                                     ],
@@ -1459,18 +1506,20 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                         ],
                                                                       )
                                                                     : Row(
-                                                                        children: const [
-                                                                          Padding(
+                                                                        children: [
+                                                                          const Padding(
                                                                               padding: EdgeInsets.only(left: 40),
                                                                               child: Icon(Icons.upload)),
                                                                           Expanded(
                                                                             child:
                                                                                 Padding(
-                                                                              padding: EdgeInsets.only(left: 30, right: 30),
+                                                                              padding: const EdgeInsets.only(left: 30, right: 30),
                                                                               child: Text(
                                                                                 "Add Company PAN/VAT Image",
                                                                                 textAlign: TextAlign.left,
-                                                                                style: TextStyle(fontFamily: "Sofia_pro", color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
+                                                                                style: GoogleFonts.comfortaa(
+                                                                                  textStyle: const TextStyle(fontFamily: "Sofia_pro", color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
+                                                                                ),
                                                                               ),
                                                                             ),
                                                                           )
@@ -1516,21 +1565,20 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                   print(
                                                                       "No Internet Connection");
                                                                   // ignore: unused_local_variable
-                                                                  const snackBar =
+                                                                  var snackBar =
                                                                       SnackBar(
                                                                     content:
                                                                         Center(
-                                                                            child:
-                                                                                Text(
-                                                                      "No Internet Connection",
-                                                                      style: TextStyle(
-                                                                          color: Colors
-                                                                              .blueGrey,
-                                                                          fontSize:
-                                                                              16,
-                                                                          fontWeight:
-                                                                              FontWeight.bold),
-                                                                    )),
+                                                                      child: Text(
+                                                                          "No Internet Connection",
+                                                                          style:
+                                                                              GoogleFonts.comfortaa(
+                                                                            textStyle: const TextStyle(
+                                                                                color: Colors.blueGrey,
+                                                                                fontSize: 16,
+                                                                                fontWeight: FontWeight.bold),
+                                                                          )),
+                                                                    ),
                                                                   );
                                                                 }
                                                               }
@@ -1577,7 +1625,7 @@ class _EmailScreenState extends State<EmailScreen> {
                                                               : Text(
                                                                   "Send"
                                                                       .toUpperCase(),
-                                                                  style: GoogleFonts.lato(
+                                                                  style: GoogleFonts.comfortaa(
                                                                       textStyle: Theme.of(
                                                                               context)
                                                                           .textTheme
