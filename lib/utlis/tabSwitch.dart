@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class TabSwitch extends StatefulWidget {
   // values for the toggle
@@ -73,11 +74,12 @@ class TabSwitchState extends State<TabSwitch> {
                     alignment: Alignment.center,
                     child: Text(
                       widget.values[index],
-                      style: const TextStyle(
+                      style:GoogleFonts.comfortaa(
+                                                                      textStyle:  const TextStyle(
                           fontSize: 14,
                           color: Colors.black87,
                           fontWeight: FontWeight.bold),
-                    ),
+                    ),),
                   ),
                 ),
               ),
@@ -102,11 +104,12 @@ class TabSwitchState extends State<TabSwitch> {
                 alignment: Alignment.center,
                 child: Text(
                   initialPosition ? widget.values[0] : widget.values[1],
-                  style: const TextStyle(
+                  style:GoogleFonts.comfortaa(
+                                                                      textStyle:  const TextStyle(
                     fontSize: 14,
                     color: Colors.black87,
                     fontWeight: FontWeight.bold,
-                  ),
+                  ),),
                 ),
               ),
             ),

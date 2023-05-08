@@ -165,7 +165,6 @@ class _HomePageState extends State<HomePage> {
                           "./assets/sms_banner.jpg",
                           fit: BoxFit.cover,
                         ),
-                        
                       ),
                     ),
                   ),
@@ -630,9 +629,20 @@ class _HomePageState extends State<HomePage> {
                                                                       ScaffoldMessenger.of(
                                                                               context)
                                                                           .showSnackBar(
-                                                                              const SnackBar(
+                                                                              SnackBar(
                                                                         content:
-                                                                            Text("No Internet Connection"),
+                                                                            Text(
+                                                                          "No Internet Connection",
+                                                                          style:
+                                                                              GoogleFonts.comfortaa(
+                                                                            textStyle:
+                                                                                const TextStyle(
+                                                                              fontSize: 20,
+                                                                              fontWeight: FontWeight.w900,
+                                                                              color: Color.fromARGB(255, 37, 0, 0),
+                                                                            ),
+                                                                          ),
+                                                                        ),
                                                                       ));
                                                                     }
                                                                   }
@@ -835,10 +845,12 @@ class _HomePageState extends State<HomePage> {
             top: 50,
             child: IconButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const documentationPage()));
+                // Navigator.push(
+                //     context,
+                //     MaterialPageRoute(
+                //         builder: (context) => const documentationPage()));
+                Navigator.of(context)
+                    .push(createRoute(const documentationPage()));
               },
               icon: const Icon(
                 Icons.code,
@@ -850,4 +862,22 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+}
+
+Route createRoute(Widget page) {
+  return PageRouteBuilder(
+    pageBuilder: (context, animation, secondaryAnimation) => page,
+    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      const begin = Offset(-1, 0);
+      const end = Offset.zero;
+      const curve = Curves.ease;
+
+      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+      return SlideTransition(
+        position: animation.drive(tween),
+        child: child,
+      );
+    },
+  );
 }
