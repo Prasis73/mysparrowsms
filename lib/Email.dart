@@ -887,7 +887,8 @@ class _EmailScreenState extends State<EmailScreen> {
                                                           TextAlign.start,
                                                       style:
                                                           GoogleFonts.comfortaa(
-                                                        textStyle: const TextStyle(
+                                                        textStyle:
+                                                            const TextStyle(
                                                           fontWeight:
                                                               FontWeight.w500,
                                                           fontSize: 20,
@@ -951,7 +952,6 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                 children: [
                                                                                   InkWell(
                                                                                     onTap: () async {
-                                                                                      Navigator.pop(context);
                                                                                       final _res = await ImageUtils.getImageFromCamera(context);
                                                                                       if (_res != null) {
                                                                                         setState(() {
@@ -979,7 +979,6 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                   //galleryyy
                                                                                   InkWell(
                                                                                     onTap: () async {
-                                                                                      Navigator.pop(context);
                                                                                       final _res = await GalleryUtils.getImageFromGallery(context);
                                                                                       if (_res != null) {
                                                                                         setState(() {
@@ -1114,7 +1113,6 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                     children: [
                                                                                       InkWell(
                                                                                         onTap: () async {
-                                                                                          Navigator.pop(context);
                                                                                           final _res = await ImageUtils.getImageFromCamera(context);
                                                                                           if (_res != null) {
                                                                                             setState(() {
@@ -1142,7 +1140,6 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                       //galleryyy
                                                                                       InkWell(
                                                                                         onTap: () async {
-                                                                                          Navigator.pop(context);
                                                                                           final _res = await GalleryUtils.getImageFromGallery(context);
                                                                                           if (_res != null) {
                                                                                             setState(() {
@@ -1266,7 +1263,6 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                     children: [
                                                                                       InkWell(
                                                                                         onTap: () async {
-                                                                                          Navigator.pop(context);
                                                                                           final _res = await ImageUtils.getImageFromCamera(context);
                                                                                           if (_res != null) {
                                                                                             setState(() {
@@ -1294,7 +1290,6 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                       //galleryyy
                                                                                       InkWell(
                                                                                         onTap: () async {
-                                                                                          Navigator.pop(context);
                                                                                           final _res = await GalleryUtils.getImageFromGallery(context);
                                                                                           if (_res != null) {
                                                                                             setState(() {
@@ -1418,7 +1413,6 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                     children: [
                                                                                       InkWell(
                                                                                         onTap: () async {
-                                                                                          Navigator.pop(context);
                                                                                           final _res = await ImageUtils.getImageFromCamera(context);
                                                                                           if (_res != null) {
                                                                                             setState(() {
@@ -1446,7 +1440,6 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                       //galleryyy
                                                                                       InkWell(
                                                                                         onTap: () async {
-                                                                                          Navigator.pop(context);
                                                                                           final _res = await GalleryUtils.getImageFromGallery(context);
                                                                                           if (_res != null) {
                                                                                             setState(() {
