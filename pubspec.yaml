@@ -47,6 +47,7 @@ dependencies:
   mailer: ^6.0.1 #for android ios
   dio: ^4.0.6 #for calling api and image files
   codeview: ^0.0.16
+  universal_io: ^2.2.0
 
 dev_dependencies:
   flutter_test:

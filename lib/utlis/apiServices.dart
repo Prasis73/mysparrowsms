@@ -1,14 +1,17 @@
 // ignore_for_file: file_names, depend_on_referenced_packages, unused_import, no_leading_underscores_for_local_identifiers
 
 import 'dart:convert';
+import 'dart:html';
+
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../model/tokenRequest_model.dart';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
-import 'dart:io';
+import 'package:universal_io/io.dart';
 
 class ApiService {
-  // signup ////////////////////////////////////////////////////////////////////////////////
   static Future addTokenRequest(TokenRequestModal data) async {
     try {
       final _dio = Dio();
@@ -70,4 +73,5 @@ class ApiService {
       return e;
     }
   }
-}
+
+  }

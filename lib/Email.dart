@@ -1,6 +1,5 @@
 // ignore_for_file: file_names, no_leading_underscores_for_local_identifiers, use_build_context_synchronously
 
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -14,6 +13,7 @@ import 'model/tokenRequest_model.dart';
 import 'utlis/apiServices.dart';
 import 'utlis/imageFileView.dart';
 import 'utlis/image_utils.dart';
+import 'package:universal_io/io.dart';
 
 class EmailScreen extends StatefulWidget {
   const EmailScreen({
@@ -100,118 +100,136 @@ class _EmailScreenState extends State<EmailScreen> {
     setState(() {
       _isLoading = true;
     });
-    TokenRequestModal tokenRequestModal = TokenRequestModal(
-      name: nameController.text,
-      phone: phoneController.text,
-      email: emailController.text,
-      companyName: companyNameController.text,
-      websiteApplication: websiteApplicationController.text,
-      requirement: requirementController.text,
-      citizenImageFront: photo,
-      citizenImageBack: photo1,
-      companyRegistration: photo2,
-      companyPanVat: photo3,
-    );
-    ApiService.addTokenRequest(tokenRequestModal).then((value) {
-      if (value["success"] == true) {
-        setState(() {
-          _isLoading = false;
-          nameController.clear();
-          phoneController.clear();
-          emailController.clear();
-          companyNameController.clear();
-          websiteApplicationController.clear();
-          requirementController.clear();
-          photo = null;
-          photo1 = null;
-          photo2 = null;
-          photo3 = null;
-        });
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Center(
-              child: Text(
-            "Mail Send Success. We will contact you soon",
-            style: GoogleFonts.comfortaa(
-              textStyle: const TextStyle(
-                  color: Colors.blueGrey,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold),
-            ),
-          )),
-        ));
-      } else {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                contentPadding: const EdgeInsets.all(30),
-                backgroundColor: Theme.of(context).secondaryHeaderColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                  side: BorderSide(color: Theme.of(context).primaryColor),
-                ),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        "Email NOT SENT",
+
+    if (kIsWeb) {
+      TokenRequestModal tokenRequestModal = TokenRequestModal(
+        name: nameController.text,
+        phone: phoneController.text,
+        email: emailController.text,
+        companyName: companyNameController.text,
+        websiteApplication: websiteApplicationController.text,
+        requirement: requirementController.text,
+        citizenImageFront: photo,
+        citizenImageBack: photo1,
+        companyRegistration: photo2,
+        companyPanVat: photo3,
+
+        // TO DO
+      );
+       } else {
+      TokenRequestModal tokenRequestModal = TokenRequestModal(
+        name: nameController.text,
+        phone: phoneController.text,
+        email: emailController.text,
+        companyName: companyNameController.text,
+        websiteApplication: websiteApplicationController.text,
+        requirement: requirementController.text,
+        citizenImageFront: photo,
+        citizenImageBack: photo1,
+        companyRegistration: photo2,
+        companyPanVat: photo3,
+      );
+      ApiService.addTokenRequest(tokenRequestModal).then((value) {
+        if (value["success"] == true) {
+          setState(() {
+            _isLoading = false;
+            nameController.clear();
+            phoneController.clear();
+            emailController.clear();
+            companyNameController.clear();
+            websiteApplicationController.clear();
+            requirementController.clear();
+            photo = null;
+            photo1 = null;
+            photo2 = null;
+            photo3 = null;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Center(
+                child: Text(
+              "Mail Send Success. We will contact you soon",
+              style: GoogleFonts.comfortaa(
+                textStyle: const TextStyle(
+                    color: Colors.blueGrey,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
+              ),
+            )),
+          ));
+        } else {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  contentPadding: const EdgeInsets.all(30),
+                  backgroundColor: Theme.of(context).secondaryHeaderColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    side: BorderSide(color: Theme.of(context).primaryColor),
+                  ),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "Email NOT SENT",
+                          style: GoogleFonts.comfortaa(
+                            textStyle: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontFamily: "IMPACT",
+                                fontSize: 48),
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        _apiMessage,
                         style: GoogleFonts.comfortaa(
                           textStyle: TextStyle(
                               color: Theme.of(context).primaryColor,
-                              fontFamily: "IMPACT",
-                              fontSize: 48),
+                              fontFamily: "Sofia Pro",
+                              fontWeight: FontWeight.bold,
+                              fontSize: 28),
                         ),
                         textAlign: TextAlign.left,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      _apiMessage,
-                      style: GoogleFonts.comfortaa(
-                        textStyle: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontFamily: "Sofia Pro",
-                            fontWeight: FontWeight.bold,
-                            fontSize: 28),
+                      const SizedBox(
+                        height: 20,
                       ),
-                      textAlign: TextAlign.left,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Align(
-                        alignment: Alignment.bottomRight,
-                        child: Container(
-                            width: 85,
-                            height: 85,
-                            padding: const EdgeInsets.all(30),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30),
-                              color: Theme.of(context).primaryColor,
-                            ),
-                            child: Icon(
-                              Icons.cancel,
-                              color: Theme.of(context).secondaryHeaderColor,
-                            )),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: Container(
+                              width: 85,
+                              height: 85,
+                              padding: const EdgeInsets.all(30),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              child: Icon(
+                                Icons.cancel,
+                                color: Theme.of(context).secondaryHeaderColor,
+                              )),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              );
-            });
-        setState(() {
-          _isLoading = false;
-        });
-      }
-    });
+                    ],
+                  ),
+                );
+              });
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      });
+    }
   }
 
   @override

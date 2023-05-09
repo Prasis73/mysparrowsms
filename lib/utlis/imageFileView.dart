@@ -1,6 +1,6 @@
 // ignore_for_file: must_be_immutable, file_names
 
-import 'dart:io';
+import 'package:universal_io/io.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

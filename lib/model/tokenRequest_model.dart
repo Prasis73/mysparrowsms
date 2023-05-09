@@ -1,6 +1,6 @@
 // ignore_for_file: file_names
 
-import 'dart:io';
+import 'package:universal_io/io.dart';
 
 class TokenRequestModal {
   String? name;
