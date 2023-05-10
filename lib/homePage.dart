@@ -725,9 +725,12 @@ class _HomePageState extends State<HomePage> {
             child: IconButton(
               onPressed: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const ProfilePage()));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ProfilePage()))
+                    .then((value) {
+                  setState(() {});
+                });
                 /*  showDialog(
                     context: context,
                     builder: (BuildContext context) {

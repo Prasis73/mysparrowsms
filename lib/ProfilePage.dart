@@ -67,7 +67,6 @@ class _ProfilePageState extends State<ProfilePage> {
       );
 
       var data = jsonDecode(response.body);
-      print(data["data"]);
       if (data["data"]["response_code"] == 200) {
         setState(() {
           _isLoading = false;
@@ -695,7 +694,8 @@ class _ProfilePageState extends State<ProfilePage> {
             top: 50,
             child: IconButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                // Navigator.of(context).pop();
+                Navigator.pop(context);
               },
               icon: const Icon(
                 Icons.arrow_back_ios,

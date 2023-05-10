@@ -3,17 +3,21 @@
 import 'dart:ui';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
+import 'model/tokenRequestWeb_model.dart';
 import 'model/tokenRequest_model.dart';
 import 'utlis/apiServices.dart';
 import 'utlis/imageFileView.dart';
 import 'utlis/image_utils.dart';
 import 'package:universal_io/io.dart';
+
+import 'utlis/webFileView.dart';
 
 class EmailScreen extends StatefulWidget {
   const EmailScreen({
@@ -32,6 +36,16 @@ class _EmailScreenState extends State<EmailScreen> {
   File? photo1;
   File? photo2;
   File? photo3;
+
+  FilePickerResult? result;
+  List<int> result1 = [];
+  List<int> result2 = [];
+  List<int> result3 = [];
+  List<int> result4 = [];
+  String? extension1;
+  String? extension2;
+  String? extension3;
+  String? extension4;
 
   final _formKey = GlobalKey<FormState>();
   TextEditingController nameController = TextEditingController();
@@ -102,21 +116,132 @@ class _EmailScreenState extends State<EmailScreen> {
     });
 
     if (kIsWeb) {
-      TokenRequestModal tokenRequestModal = TokenRequestModal(
+      TokenRequestModalWeb tokenRequestModalWeb = TokenRequestModalWeb(
         name: nameController.text,
         phone: phoneController.text,
         email: emailController.text,
         companyName: companyNameController.text,
         websiteApplication: websiteApplicationController.text,
         requirement: requirementController.text,
-        citizenImageFront: photo,
-        citizenImageBack: photo1,
-        companyRegistration: photo2,
-        companyPanVat: photo3,
-
-        // TO DO
+        citizenImageFront: result1,
+        citizenImageBack: result2,
+        companyRegistration: result3,
+        companyPanVat: result4,
+        citizenImageFrontExt: extension1,
+        citizenImageBackExt: extension2,
+        companyRegistrationExt: extension3,
+        companyPanVatExt: extension4,
       );
-       } else {
+
+      ApiService.addTokenRequestWeb(tokenRequestModalWeb).then((value) {
+        if (value["success"] == true) {
+          setState(() {
+            _isLoading = false;
+            nameController.clear();
+            phoneController.clear();
+            emailController.clear();
+            companyNameController.clear();
+            websiteApplicationController.clear();
+            requirementController.clear();
+            photo = null;
+            photo1 = null;
+            photo2 = null;
+            photo3 = null;
+            result1 = [];
+            result2 = [];
+            result3 = [];
+            result4 = [];
+            extension1 = null;
+            extension2 = null;
+            extension3 = null;
+            extension4 = null;
+          });
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Center(
+                child: Text(
+              "Mail Send Success. We will contact you soon",
+              style: GoogleFonts.comfortaa(
+                textStyle: const TextStyle(
+                    color: Colors.blueGrey,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
+              ),
+            )),
+          ));
+        } else {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  contentPadding: const EdgeInsets.all(30),
+                  backgroundColor: Theme.of(context).secondaryHeaderColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    side: BorderSide(color: Theme.of(context).primaryColor),
+                  ),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          "Email NOT SENT",
+                          style: GoogleFonts.comfortaa(
+                            textStyle: TextStyle(
+                                color: Theme.of(context).primaryColor,
+                                fontFamily: "IMPACT",
+                                fontSize: 48),
+                          ),
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        _apiMessage,
+                        style: GoogleFonts.comfortaa(
+                          textStyle: TextStyle(
+                              color: Theme.of(context).primaryColor,
+                              fontFamily: "Sofia Pro",
+                              fontWeight: FontWeight.bold,
+                              fontSize: 28),
+                        ),
+                        textAlign: TextAlign.left,
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: Container(
+                              width: 85,
+                              height: 85,
+                              padding: const EdgeInsets.all(30),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30),
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              child: Icon(
+                                Icons.cancel,
+                                color: Theme.of(context).secondaryHeaderColor,
+                              )),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              });
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      });
+    } else {
       TokenRequestModal tokenRequestModal = TokenRequestModal(
         name: nameController.text,
         phone: phoneController.text,
@@ -143,6 +268,14 @@ class _EmailScreenState extends State<EmailScreen> {
             photo1 = null;
             photo2 = null;
             photo3 = null;
+            result1 = [];
+            result2 = [];
+            result3 = [];
+            result4 = [];
+            extension1 = null;
+            extension2 = null;
+            extension3 = null;
+            extension4 = null;
           });
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Center(
@@ -941,151 +1074,166 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                     0.7),
                                                           ),
                                                           child: InkWell(
-                                                            onTap: photo != null
-                                                                ? () {
-                                                                    Navigator.push(
-                                                                        context,
-                                                                        MaterialPageRoute(
-                                                                            builder: (context) =>
-                                                                                ImageFileView(data: photo!)));
-                                                                  }
-                                                                : () {
-                                                                    showDialog(
-                                                                        context:
-                                                                            context,
-                                                                        builder:
-                                                                            (BuildContext
-                                                                                context) {
-                                                                          return AlertDialog(
-                                                                            backgroundColor:
-                                                                                Theme.of(context).secondaryHeaderColor,
-                                                                            shape:
-                                                                                RoundedRectangleBorder(
-                                                                              borderRadius: BorderRadius.circular(10.0),
-                                                                            ),
-                                                                            content:
-                                                                                SizedBox(
-                                                                              height: 120,
-                                                                              child: Column(
-                                                                                children: [
-                                                                                  InkWell(
-                                                                                    onTap: () async {
-                                                                                      final _res = await ImageUtils.getImageFromCamera(context);
-                                                                                      if (_res != null) {
-                                                                                        setState(() {
-                                                                                          photo = _res;
-                                                                                        });
-                                                                                      }
-                                                                                      Navigator.pop(context);
-                                                                                    },
-                                                                                    child: ListTile(
-                                                                                      leading: const Icon(
-                                                                                        Icons.camera,
-                                                                                        color: Colors.black,
-                                                                                      ),
-                                                                                      title: Text(
-                                                                                        "Camera",
-                                                                                        style: GoogleFonts.comfortaa(
-                                                                                          textStyle: const TextStyle(
-                                                                                            color: Colors.black,
+                                                            onTap:
+                                                                result1.isNotEmpty ||
+                                                                        photo !=
+                                                                            null
+                                                                    ? () {
+                                                                        if (kIsWeb) {
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(builder: (context) => WebFileView(data: result1)));
+                                                                        } else {
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(builder: (context) => ImageFileView(data: photo!)));
+                                                                        }
+                                                                      }
+                                                                    : () async {
+                                                                        if (kIsWeb) {
+                                                                          result = await FilePicker
+                                                                              .platform
+                                                                              .pickFiles(
+                                                                            type:
+                                                                                FileType.custom,
+                                                                            allowedExtensions: [
+                                                                              'jpg',
+                                                                              'png'
+                                                                            ],
+                                                                          );
+
+                                                                          setState(
+                                                                              () {
+                                                                            result1 =
+                                                                                result!.files[0].bytes as List<int>;
+                                                                            extension1 =
+                                                                                result!.files[0].extension;
+                                                                          });
+                                                                        } else {
+                                                                          showDialog(
+                                                                              context: context,
+                                                                              builder: (BuildContext context) {
+                                                                                return AlertDialog(
+                                                                                  backgroundColor: Theme.of(context).secondaryHeaderColor,
+                                                                                  shape: RoundedRectangleBorder(
+                                                                                    borderRadius: BorderRadius.circular(10.0),
+                                                                                  ),
+                                                                                  content: SizedBox(
+                                                                                    height: 120,
+                                                                                    child: Column(
+                                                                                      children: [
+                                                                                        InkWell(
+                                                                                          onTap: () async {
+                                                                                            final _res = await ImageUtils.getImageFromCamera(context);
+                                                                                            if (_res != null) {
+                                                                                              setState(() {
+                                                                                                photo = _res;
+                                                                                              });
+                                                                                            }
+                                                                                            Navigator.pop(context);
+                                                                                          },
+                                                                                          child: ListTile(
+                                                                                            leading: const Icon(
+                                                                                              Icons.camera,
+                                                                                              color: Colors.black,
+                                                                                            ),
+                                                                                            title: Text(
+                                                                                              "Camera",
+                                                                                              style: GoogleFonts.comfortaa(
+                                                                                                textStyle: const TextStyle(
+                                                                                                  color: Colors.black,
+                                                                                                ),
+                                                                                              ),
+                                                                                            ),
                                                                                           ),
                                                                                         ),
-                                                                                      ),
+
+                                                                                        //galleryyy
+                                                                                        InkWell(
+                                                                                          onTap: () async {
+                                                                                            final _res = await GalleryUtils.getImageFromGallery(context);
+                                                                                            if (_res != null) {
+                                                                                              setState(() {
+                                                                                                photo = _res;
+                                                                                              });
+                                                                                            }
+                                                                                            Navigator.pop(context);
+                                                                                          },
+                                                                                          child: ListTile(
+                                                                                            leading: const Icon(
+                                                                                              Icons.photo_album,
+                                                                                              color: Colors.black,
+                                                                                            ),
+                                                                                            title: Text("Gallery", style: GoogleFonts.comfortaa(textStyle: const TextStyle(color: Colors.black))),
+                                                                                          ),
+                                                                                        )
+                                                                                      ],
                                                                                     ),
                                                                                   ),
-
-                                                                                  //galleryyy
-                                                                                  InkWell(
-                                                                                    onTap: () async {
-                                                                                      final _res = await GalleryUtils.getImageFromGallery(context);
-                                                                                      if (_res != null) {
-                                                                                        setState(() {
-                                                                                          photo = _res;
-                                                                                        });
-                                                                                      }
-                                                                                      Navigator.pop(context);
-                                                                                    },
-                                                                                    child: ListTile(
-                                                                                      leading: const Icon(
-                                                                                        Icons.photo_album,
-                                                                                        color: Colors.black,
-                                                                                      ),
-                                                                                      title: Text("Gallery", style: GoogleFonts.comfortaa(textStyle: const TextStyle(color: Colors.black))),
-                                                                                    ),
-                                                                                  )
-                                                                                ],
-                                                                              ),
-                                                                            ),
-                                                                          );
-                                                                        });
-                                                                  },
-                                                            child: photo != null
-                                                                ? Stack(
-                                                                    children: [
-                                                                      ClipRRect(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(30),
-                                                                        child: kIsWeb
-                                                                            ? Image.network(
-                                                                                photo!.path,
-                                                                                fit: BoxFit.cover,
-                                                                                height: 100,
-                                                                                width: 300,
-                                                                              )
-                                                                            : Image.file(
-                                                                                photo!,
-                                                                                fit: BoxFit.cover,
-                                                                                height: 100,
-                                                                                width: 300,
-                                                                              ),
-                                                                      ),
-                                                                      Positioned(
-                                                                          right:
-                                                                              5,
-                                                                          child:
-                                                                              IconButton(
-                                                                            icon:
-                                                                                const Icon(
-                                                                              Icons.clear,
-                                                                              color: Colors.red,
-                                                                            ),
-                                                                            onPressed:
-                                                                                () {
-                                                                              setState(() {
-                                                                                photo = null;
+                                                                                );
                                                                               });
-                                                                            },
-                                                                          ))
-                                                                    ],
-                                                                  )
-                                                                : Row(
-                                                                    children: [
-                                                                      const Padding(
-                                                                          padding: EdgeInsets.only(
-                                                                              left:
-                                                                                  40),
-                                                                          child:
-                                                                              Icon(Icons.upload)),
-                                                                      Expanded(
-                                                                        child:
-                                                                            Padding(
-                                                                          padding: const EdgeInsets.only(
-                                                                              left: 30,
-                                                                              right: 30),
-                                                                          child:
-                                                                              Text(
-                                                                            "Add Citizenship Front Image",
-                                                                            textAlign:
-                                                                                TextAlign.left,
-                                                                            style:
-                                                                                GoogleFonts.comfortaa(
-                                                                              textStyle: const TextStyle(fontFamily: "Sofia_pro", color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
-                                                                            ),
+                                                                        }
+                                                                      },
+                                                            child:
+                                                                result1.isNotEmpty ||
+                                                                        photo !=
+                                                                            null
+                                                                    ? Stack(
+                                                                        children: [
+                                                                          ClipRRect(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(30),
+                                                                            child: kIsWeb
+                                                                                ? Image.memory(
+                                                                                    result1 as Uint8List,
+                                                                                    fit: BoxFit.cover,
+                                                                                    height: 100,
+                                                                                    width: 300,
+                                                                                  )
+                                                                                : Image.file(
+                                                                                    photo!,
+                                                                                    fit: BoxFit.cover,
+                                                                                    height: 100,
+                                                                                    width: 300,
+                                                                                  ),
                                                                           ),
-                                                                        ),
+                                                                          Positioned(
+                                                                              right: 5,
+                                                                              child: IconButton(
+                                                                                icon: const Icon(
+                                                                                  Icons.clear,
+                                                                                  color: Colors.red,
+                                                                                ),
+                                                                                onPressed: () {
+                                                                                  setState(() {
+                                                                                    photo = null;
+                                                                                    result1 = [];
+                                                                                    extension1 = null;
+                                                                                  });
+                                                                                },
+                                                                              ))
+                                                                        ],
                                                                       )
-                                                                    ],
-                                                                  ),
+                                                                    : Row(
+                                                                        children: [
+                                                                          const Padding(
+                                                                              padding: EdgeInsets.only(left: 40),
+                                                                              child: Icon(Icons.upload)),
+                                                                          Expanded(
+                                                                            child:
+                                                                                Padding(
+                                                                              padding: const EdgeInsets.only(left: 30, right: 30),
+                                                                              child: Text(
+                                                                                "Add Citizenship Front Image",
+                                                                                textAlign: TextAlign.left,
+                                                                                style: GoogleFonts.comfortaa(
+                                                                                  textStyle: const TextStyle(fontFamily: "Sofia_pro", color: Colors.black, fontSize: 20, fontWeight: FontWeight.w400),
+                                                                                ),
+                                                                              ),
+                                                                            ),
+                                                                          )
+                                                                        ],
+                                                                      ),
                                                           ),
                                                         ),
                                                         const SizedBox(
@@ -1108,88 +1256,117 @@ class _EmailScreenState extends State<EmailScreen> {
                                                           ),
                                                           child: InkWell(
                                                             onTap:
-                                                                photo1 != null
+                                                                result2.isNotEmpty ||
+                                                                        photo1 !=
+                                                                            null
                                                                     ? () {
-                                                                        Navigator.push(
-                                                                            context,
-                                                                            MaterialPageRoute(builder: (context) => ImageFileView(data: photo1!)));
+                                                                        if (kIsWeb) {
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(builder: (context) => WebFileView(data: result2)));
+                                                                        } else {
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(builder: (context) => ImageFileView(data: photo1!)));
+                                                                        }
                                                                       }
-                                                                    : () {
-                                                                        showDialog(
-                                                                            context:
-                                                                                context,
-                                                                            builder:
-                                                                                (BuildContext context) {
-                                                                              return AlertDialog(
-                                                                                backgroundColor: Theme.of(context).secondaryHeaderColor,
-                                                                                shape: RoundedRectangleBorder(
-                                                                                  borderRadius: BorderRadius.circular(10.0),
-                                                                                ),
-                                                                                content: SizedBox(
-                                                                                  height: 120,
-                                                                                  child: Column(
-                                                                                    children: [
-                                                                                      InkWell(
-                                                                                        onTap: () async {
-                                                                                          final _res = await ImageUtils.getImageFromCamera(context);
-                                                                                          if (_res != null) {
-                                                                                            setState(() {
-                                                                                              photo1 = _res;
-                                                                                            });
-                                                                                          }
-                                                                                          Navigator.pop(context);
-                                                                                        },
-                                                                                        child: ListTile(
-                                                                                          leading: const Icon(
-                                                                                            Icons.camera,
-                                                                                            color: Colors.black,
-                                                                                          ),
-                                                                                          title: Text(
-                                                                                            "Camera",
-                                                                                            style: GoogleFonts.comfortaa(
-                                                                                              textStyle: const TextStyle(
-                                                                                                color: Colors.black,
+                                                                    : () async {
+                                                                        if (kIsWeb) {
+                                                                          result = await FilePicker
+                                                                              .platform
+                                                                              .pickFiles(
+                                                                            type:
+                                                                                FileType.custom,
+                                                                            allowedExtensions: [
+                                                                              'jpg',
+                                                                              'png'
+                                                                            ],
+                                                                          );
+
+                                                                          setState(
+                                                                              () {
+                                                                            result2 =
+                                                                                result!.files[0].bytes as List<int>;
+                                                                            extension2 =
+                                                                                result!.files[0].extension;
+                                                                          });
+                                                                        } else {
+                                                                          showDialog(
+                                                                              context: context,
+                                                                              builder: (BuildContext context) {
+                                                                                return AlertDialog(
+                                                                                  backgroundColor: Theme.of(context).secondaryHeaderColor,
+                                                                                  shape: RoundedRectangleBorder(
+                                                                                    borderRadius: BorderRadius.circular(10.0),
+                                                                                  ),
+                                                                                  content: SizedBox(
+                                                                                    height: 120,
+                                                                                    child: Column(
+                                                                                      children: [
+                                                                                        InkWell(
+                                                                                          onTap: () async {
+                                                                                            final _res = await ImageUtils.getImageFromCamera(context);
+                                                                                            if (_res != null) {
+                                                                                              setState(() {
+                                                                                                photo1 = _res;
+                                                                                              });
+                                                                                            }
+                                                                                            Navigator.pop(context);
+                                                                                          },
+                                                                                          child: ListTile(
+                                                                                            leading: const Icon(
+                                                                                              Icons.camera,
+                                                                                              color: Colors.black,
+                                                                                            ),
+                                                                                            title: Text(
+                                                                                              "Camera",
+                                                                                              style: GoogleFonts.comfortaa(
+                                                                                                textStyle: const TextStyle(
+                                                                                                  color: Colors.black,
+                                                                                                ),
                                                                                               ),
                                                                                             ),
                                                                                           ),
                                                                                         ),
-                                                                                      ),
 
-                                                                                      //galleryyy
-                                                                                      InkWell(
-                                                                                        onTap: () async {
-                                                                                          final _res = await GalleryUtils.getImageFromGallery(context);
-                                                                                          if (_res != null) {
-                                                                                            setState(() {
-                                                                                              photo1 = _res;
-                                                                                            });
-                                                                                          }
-                                                                                          Navigator.pop(context);
-                                                                                        },
-                                                                                        child: ListTile(
-                                                                                          leading: const Icon(
-                                                                                            Icons.photo_album,
-                                                                                            color: Colors.black,
+                                                                                        //galleryyy
+                                                                                        InkWell(
+                                                                                          onTap: () async {
+                                                                                            final _res = await GalleryUtils.getImageFromGallery(context);
+                                                                                            if (_res != null) {
+                                                                                              setState(() {
+                                                                                                photo1 = _res;
+                                                                                              });
+                                                                                            }
+                                                                                            Navigator.pop(context);
+                                                                                          },
+                                                                                          child: ListTile(
+                                                                                            leading: const Icon(
+                                                                                              Icons.photo_album,
+                                                                                              color: Colors.black,
+                                                                                            ),
+                                                                                            title: Text("Gallery", style: GoogleFonts.comfortaa(textStyle: const TextStyle(color: Colors.black))),
                                                                                           ),
-                                                                                          title: Text("Gallery", style: GoogleFonts.comfortaa(textStyle: const TextStyle(color: Colors.black))),
-                                                                                        ),
-                                                                                      )
-                                                                                    ],
+                                                                                        )
+                                                                                      ],
+                                                                                    ),
                                                                                   ),
-                                                                                ),
-                                                                              );
-                                                                            });
+                                                                                );
+                                                                              });
+                                                                        }
                                                                       },
                                                             child:
-                                                                photo1 != null
+                                                                result2.isNotEmpty ||
+                                                                        photo1 !=
+                                                                            null
                                                                     ? Stack(
                                                                         children: [
                                                                           ClipRRect(
                                                                             borderRadius:
                                                                                 BorderRadius.circular(30),
                                                                             child: kIsWeb
-                                                                                ? Image.network(
-                                                                                    photo1!.path,
+                                                                                ? Image.memory(
+                                                                                    result2 as Uint8List,
                                                                                     fit: BoxFit.cover,
                                                                                     height: 100,
                                                                                     width: 300,
@@ -1211,6 +1388,8 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                 onPressed: () {
                                                                                   setState(() {
                                                                                     photo1 = null;
+                                                                                    result2 = [];
+                                                                                    extension2 = null;
                                                                                   });
                                                                                 },
                                                                               ))
@@ -1258,88 +1437,117 @@ class _EmailScreenState extends State<EmailScreen> {
                                                           ),
                                                           child: InkWell(
                                                             onTap:
-                                                                photo2 != null
+                                                                result3.isNotEmpty ||
+                                                                        photo2 !=
+                                                                            null
                                                                     ? () {
-                                                                        Navigator.push(
-                                                                            context,
-                                                                            MaterialPageRoute(builder: (context) => ImageFileView(data: photo2!)));
+                                                                        if (kIsWeb) {
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(builder: (context) => WebFileView(data: result3)));
+                                                                        } else {
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(builder: (context) => ImageFileView(data: photo2!)));
+                                                                        }
                                                                       }
-                                                                    : () {
-                                                                        showDialog(
-                                                                            context:
-                                                                                context,
-                                                                            builder:
-                                                                                (BuildContext context) {
-                                                                              return AlertDialog(
-                                                                                backgroundColor: Theme.of(context).secondaryHeaderColor,
-                                                                                shape: RoundedRectangleBorder(
-                                                                                  borderRadius: BorderRadius.circular(10.0),
-                                                                                ),
-                                                                                content: SizedBox(
-                                                                                  height: 120,
-                                                                                  child: Column(
-                                                                                    children: [
-                                                                                      InkWell(
-                                                                                        onTap: () async {
-                                                                                          final _res = await ImageUtils.getImageFromCamera(context);
-                                                                                          if (_res != null) {
-                                                                                            setState(() {
-                                                                                              photo2 = _res;
-                                                                                            });
-                                                                                          }
-                                                                                          Navigator.pop(context);
-                                                                                        },
-                                                                                        child: ListTile(
-                                                                                          leading: const Icon(
-                                                                                            Icons.camera,
-                                                                                            color: Colors.black,
-                                                                                          ),
-                                                                                          title: Text(
-                                                                                            "Camera",
-                                                                                            style: GoogleFonts.comfortaa(
-                                                                                              textStyle: const TextStyle(
-                                                                                                color: Colors.black,
+                                                                    : () async {
+                                                                        if (kIsWeb) {
+                                                                          result = await FilePicker
+                                                                              .platform
+                                                                              .pickFiles(
+                                                                            type:
+                                                                                FileType.custom,
+                                                                            allowedExtensions: [
+                                                                              'jpg',
+                                                                              'png'
+                                                                            ],
+                                                                          );
+
+                                                                          setState(
+                                                                              () {
+                                                                            result3 =
+                                                                                result!.files[0].bytes as List<int>;
+                                                                            extension3 =
+                                                                                result!.files[0].extension;
+                                                                          });
+                                                                        } else {
+                                                                          showDialog(
+                                                                              context: context,
+                                                                              builder: (BuildContext context) {
+                                                                                return AlertDialog(
+                                                                                  backgroundColor: Theme.of(context).secondaryHeaderColor,
+                                                                                  shape: RoundedRectangleBorder(
+                                                                                    borderRadius: BorderRadius.circular(10.0),
+                                                                                  ),
+                                                                                  content: SizedBox(
+                                                                                    height: 120,
+                                                                                    child: Column(
+                                                                                      children: [
+                                                                                        InkWell(
+                                                                                          onTap: () async {
+                                                                                            final _res = await ImageUtils.getImageFromCamera(context);
+                                                                                            if (_res != null) {
+                                                                                              setState(() {
+                                                                                                photo2 = _res;
+                                                                                              });
+                                                                                            }
+                                                                                            Navigator.pop(context);
+                                                                                          },
+                                                                                          child: ListTile(
+                                                                                            leading: const Icon(
+                                                                                              Icons.camera,
+                                                                                              color: Colors.black,
+                                                                                            ),
+                                                                                            title: Text(
+                                                                                              "Camera",
+                                                                                              style: GoogleFonts.comfortaa(
+                                                                                                textStyle: const TextStyle(
+                                                                                                  color: Colors.black,
+                                                                                                ),
                                                                                               ),
                                                                                             ),
                                                                                           ),
                                                                                         ),
-                                                                                      ),
 
-                                                                                      //galleryyy
-                                                                                      InkWell(
-                                                                                        onTap: () async {
-                                                                                          final _res = await GalleryUtils.getImageFromGallery(context);
-                                                                                          if (_res != null) {
-                                                                                            setState(() {
-                                                                                              photo2 = _res;
-                                                                                            });
-                                                                                          }
-                                                                                          Navigator.pop(context);
-                                                                                        },
-                                                                                        child: ListTile(
-                                                                                          leading: const Icon(
-                                                                                            Icons.photo_album,
-                                                                                            color: Colors.black,
+                                                                                        //galleryyy
+                                                                                        InkWell(
+                                                                                          onTap: () async {
+                                                                                            final _res = await GalleryUtils.getImageFromGallery(context);
+                                                                                            if (_res != null) {
+                                                                                              setState(() {
+                                                                                                photo2 = _res;
+                                                                                              });
+                                                                                            }
+                                                                                            Navigator.pop(context);
+                                                                                          },
+                                                                                          child: ListTile(
+                                                                                            leading: const Icon(
+                                                                                              Icons.photo_album,
+                                                                                              color: Colors.black,
+                                                                                            ),
+                                                                                            title: Text("Gallery", style: GoogleFonts.comfortaa(textStyle: const TextStyle(color: Colors.black))),
                                                                                           ),
-                                                                                          title: Text("Gallery", style: GoogleFonts.comfortaa(textStyle: const TextStyle(color: Colors.black))),
-                                                                                        ),
-                                                                                      )
-                                                                                    ],
+                                                                                        )
+                                                                                      ],
+                                                                                    ),
                                                                                   ),
-                                                                                ),
-                                                                              );
-                                                                            });
+                                                                                );
+                                                                              });
+                                                                        }
                                                                       },
                                                             child:
-                                                                photo2 != null
+                                                                result3.isNotEmpty ||
+                                                                        photo2 !=
+                                                                            null
                                                                     ? Stack(
                                                                         children: [
                                                                           ClipRRect(
                                                                             borderRadius:
                                                                                 BorderRadius.circular(30),
                                                                             child: kIsWeb
-                                                                                ? Image.network(
-                                                                                    photo2!.path,
+                                                                                ? Image.memory(
+                                                                                    result3 as Uint8List,
                                                                                     fit: BoxFit.cover,
                                                                                     height: 100,
                                                                                     width: 300,
@@ -1361,6 +1569,8 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                 onPressed: () {
                                                                                   setState(() {
                                                                                     photo2 = null;
+                                                                                    result3 = [];
+                                                                                    extension3 = null;
                                                                                   });
                                                                                 },
                                                                               ))
@@ -1408,88 +1618,117 @@ class _EmailScreenState extends State<EmailScreen> {
                                                           ),
                                                           child: InkWell(
                                                             onTap:
-                                                                photo3 != null
+                                                                result4.isNotEmpty ||
+                                                                        photo3 !=
+                                                                            null
                                                                     ? () {
-                                                                        Navigator.push(
-                                                                            context,
-                                                                            MaterialPageRoute(builder: (context) => ImageFileView(data: photo3!)));
+                                                                        if (kIsWeb) {
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(builder: (context) => WebFileView(data: result4)));
+                                                                        } else {
+                                                                          Navigator.push(
+                                                                              context,
+                                                                              MaterialPageRoute(builder: (context) => ImageFileView(data: photo3!)));
+                                                                        }
                                                                       }
-                                                                    : () {
-                                                                        showDialog(
-                                                                            context:
-                                                                                context,
-                                                                            builder:
-                                                                                (BuildContext context) {
-                                                                              return AlertDialog(
-                                                                                backgroundColor: Theme.of(context).secondaryHeaderColor,
-                                                                                shape: RoundedRectangleBorder(
-                                                                                  borderRadius: BorderRadius.circular(10.0),
-                                                                                ),
-                                                                                content: SizedBox(
-                                                                                  height: 120,
-                                                                                  child: Column(
-                                                                                    children: [
-                                                                                      InkWell(
-                                                                                        onTap: () async {
-                                                                                          final _res = await ImageUtils.getImageFromCamera(context);
-                                                                                          if (_res != null) {
-                                                                                            setState(() {
-                                                                                              photo3 = _res;
-                                                                                            });
-                                                                                          }
-                                                                                          Navigator.pop(context);
-                                                                                        },
-                                                                                        child: ListTile(
-                                                                                          leading: const Icon(
-                                                                                            Icons.camera,
-                                                                                            color: Colors.black,
-                                                                                          ),
-                                                                                          title: Text(
-                                                                                            "Camera",
-                                                                                            style: GoogleFonts.comfortaa(
-                                                                                              textStyle: const TextStyle(
-                                                                                                color: Colors.black,
+                                                                    : () async {
+                                                                        if (kIsWeb) {
+                                                                          result = await FilePicker
+                                                                              .platform
+                                                                              .pickFiles(
+                                                                            type:
+                                                                                FileType.custom,
+                                                                            allowedExtensions: [
+                                                                              'jpg',
+                                                                              'png'
+                                                                            ],
+                                                                          );
+
+                                                                          setState(
+                                                                              () {
+                                                                            result4 =
+                                                                                result!.files[0].bytes as List<int>;
+                                                                            extension4 =
+                                                                                result!.files[0].extension;
+                                                                          });
+                                                                        } else {
+                                                                          showDialog(
+                                                                              context: context,
+                                                                              builder: (BuildContext context) {
+                                                                                return AlertDialog(
+                                                                                  backgroundColor: Theme.of(context).secondaryHeaderColor,
+                                                                                  shape: RoundedRectangleBorder(
+                                                                                    borderRadius: BorderRadius.circular(10.0),
+                                                                                  ),
+                                                                                  content: SizedBox(
+                                                                                    height: 120,
+                                                                                    child: Column(
+                                                                                      children: [
+                                                                                        InkWell(
+                                                                                          onTap: () async {
+                                                                                            final _res = await ImageUtils.getImageFromCamera(context);
+                                                                                            if (_res != null) {
+                                                                                              setState(() {
+                                                                                                photo3 = _res;
+                                                                                              });
+                                                                                            }
+                                                                                            Navigator.pop(context);
+                                                                                          },
+                                                                                          child: ListTile(
+                                                                                            leading: const Icon(
+                                                                                              Icons.camera,
+                                                                                              color: Colors.black,
+                                                                                            ),
+                                                                                            title: Text(
+                                                                                              "Camera",
+                                                                                              style: GoogleFonts.comfortaa(
+                                                                                                textStyle: const TextStyle(
+                                                                                                  color: Colors.black,
+                                                                                                ),
                                                                                               ),
                                                                                             ),
                                                                                           ),
                                                                                         ),
-                                                                                      ),
 
-                                                                                      //galleryyy
-                                                                                      InkWell(
-                                                                                        onTap: () async {
-                                                                                          final _res = await GalleryUtils.getImageFromGallery(context);
-                                                                                          if (_res != null) {
-                                                                                            setState(() {
-                                                                                              photo3 = _res;
-                                                                                            });
-                                                                                          }
-                                                                                          Navigator.pop(context);
-                                                                                        },
-                                                                                        child: ListTile(
-                                                                                          leading: const Icon(
-                                                                                            Icons.photo_album,
-                                                                                            color: Colors.black,
+                                                                                        //galleryyy
+                                                                                        InkWell(
+                                                                                          onTap: () async {
+                                                                                            final _res = await GalleryUtils.getImageFromGallery(context);
+                                                                                            if (_res != null) {
+                                                                                              setState(() {
+                                                                                                photo3 = _res;
+                                                                                              });
+                                                                                            }
+                                                                                            Navigator.pop(context);
+                                                                                          },
+                                                                                          child: ListTile(
+                                                                                            leading: const Icon(
+                                                                                              Icons.photo_album,
+                                                                                              color: Colors.black,
+                                                                                            ),
+                                                                                            title: Text("Gallery", style: GoogleFonts.comfortaa(textStyle: const TextStyle(color: Colors.black))),
                                                                                           ),
-                                                                                          title: Text("Gallery", style: GoogleFonts.comfortaa(textStyle: const TextStyle(color: Colors.black))),
-                                                                                        ),
-                                                                                      )
-                                                                                    ],
+                                                                                        )
+                                                                                      ],
+                                                                                    ),
                                                                                   ),
-                                                                                ),
-                                                                              );
-                                                                            });
+                                                                                );
+                                                                              });
+                                                                        }
                                                                       },
                                                             child:
-                                                                photo3 != null
+                                                                result4.isNotEmpty ||
+                                                                        photo3 !=
+                                                                            null
                                                                     ? Stack(
                                                                         children: [
                                                                           ClipRRect(
                                                                             borderRadius:
                                                                                 BorderRadius.circular(30),
                                                                             child: kIsWeb
-                                                                                ? Image.network(
-                                                                                    photo3!.path,
+                                                                                ? Image.memory(
+                                                                                    result4 as Uint8List,
                                                                                     fit: BoxFit.cover,
                                                                                     height: 100,
                                                                                     width: 300,
@@ -1511,6 +1750,8 @@ class _EmailScreenState extends State<EmailScreen> {
                                                                                 onPressed: () {
                                                                                   setState(() {
                                                                                     photo3 = null;
+                                                                                    result4 = [];
+                                                                                    extension4 = null;
                                                                                   });
                                                                                 },
                                                                               ))
