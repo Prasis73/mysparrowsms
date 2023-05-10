@@ -2,13 +2,16 @@
 
 import 'dart:convert';
 
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../model/tokenRequestWeb_model.dart';
 import '../model/tokenRequest_model.dart';
 import 'package:dio/dio.dart';
 import 'package:http_parser/http_parser.dart';
-import 'dart:io';
+import 'package:universal_io/io.dart';
 
 class ApiService {
-  // signup ////////////////////////////////////////////////////////////////////////////////
   static Future addTokenRequest(TokenRequestModal data) async {
     try {
       final _dio = Dio();
@@ -53,6 +56,53 @@ class ApiService {
             ? await MultipartFile.fromFile(data.companyPanVat!.path,
                 filename: companyPanVat,
                 contentType: MediaType('image', companyPanVat.split(".").last))
+            : null,
+      });
+      final response = await _dio.post(
+          "https://cylinder.eachut.com/purchaseTokenRequest",
+          data: _formdata);
+      var decoded = jsonDecode(response.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 400) {
+        return decoded;
+      }
+      return decoded;
+    } on DioError catch (e) {
+      return e;
+    } catch (e) {
+      return e;
+    }
+  }
+
+  static Future addTokenRequestWeb(TokenRequestModalWeb data) async {
+    try {
+      final _dio = Dio();
+      final FormData _formdata = FormData.fromMap({
+        "name": data.name,
+        "phone": data.phone,
+        "email": data.email,
+        "companyName": data.companyName,
+        "websiteApplication": data.websiteApplication,
+        "requirement": data.requirement,
+        "citizenImageFront": data.citizenImageFront != null
+            ? MultipartFile.fromBytes(data.citizenImageFront as List<int>,
+                filename: "citizenImageFront",
+                contentType: MediaType('image', data.citizenImageFrontExt!))
+            : null,
+        "citizenImageBack": data.citizenImageBack != null
+            ? MultipartFile.fromBytes(data.citizenImageBack as List<int>,
+                filename: "citizenImageBack",
+                contentType: MediaType('image', data.citizenImageBackExt!))
+            : null,
+        "companyRegistration": data.companyRegistration != null
+            ? MultipartFile.fromBytes(data.companyRegistration as List<int>,
+                filename: "companyRegistration",
+                contentType: MediaType('image', data.companyRegistrationExt!))
+            : null,
+        "companyPanVat": data.companyPanVat != null
+            ? MultipartFile.fromBytes(data.companyPanVat as List<int>,
+                filename: "companyPanVat",
+                contentType: MediaType('image', data.companyPanVatExt!))
             : null,
       });
       final response = await _dio.post(

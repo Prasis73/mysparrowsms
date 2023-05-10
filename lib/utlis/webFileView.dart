@@ -1,21 +1,20 @@
 // ignore_for_file: must_be_immutable, file_names
 
-import 'package:universal_io/io.dart';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:zoom_widget/zoom_widget.dart';
 
-class ImageFileView extends StatefulWidget {
-  File data;
-  ImageFileView({Key? key, required this.data}) : super(key: key);
+class WebFileView extends StatefulWidget {
+  List<int> data;
+  WebFileView({Key? key, required this.data}) : super(key: key);
 
   @override
-  State<ImageFileView> createState() => _ImageFileViewState();
+  State<WebFileView> createState() => _WebFileViewState();
 }
 
-class _ImageFileViewState extends State<ImageFileView> {
+class _WebFileViewState extends State<WebFileView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,13 +33,9 @@ class _ImageFileViewState extends State<ImageFileView> {
         initZoom: 0.0,
         maxZoomWidth: 1000,
         maxZoomHeight: 1550,
-        child: kIsWeb
-            ? Image.network(
-                widget.data.path,
-              )
-            : Image.file(
-                widget.data,
-              ),
+        child: Image.memory(
+          widget.data as Uint8List,
+        ),
         // CachedNetworkImage(imageUrl: widget.data),
         //  Html(
         //   data: widget.data,

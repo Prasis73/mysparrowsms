@@ -54,27 +54,32 @@ class _ProfilePageState extends State<ProfilePage> {
         tokenEmpty = false;
       });
       String sparrowsmsToken = GetSetStorage.getAPI();
-      final url = Uri.parse(
-          "http://api.sparrowsms.com/v2/credit/?token=$sparrowsmsToken");
+      final url =
+          Uri.parse("https://cylinder.eachut.com/smsCount/$sparrowsmsToken");
+// v2_wbHmPaUlRGhmhkTMeY1tztQhsY3.BoR5
       final response = await http.get(
         url,
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          'Content-Type': 'application/json',
+          'Accept': '*/*'
+        },
       );
 
       var data = jsonDecode(response.body);
-      if (data["response_code"] == 200) {
+      if (data["data"]["response_code"] == 200) {
         setState(() {
           _isLoading = false;
-          credits_available = data["credits_available"].toString();
-          credits_consumed = data["credits_consumed"].toString();
-          last_balance_added = data["last_balance_added"].toString();
-          minimum_credit = data["minimum_credit"].toString();
+          credits_available = data["data"]["credits_available"].toString();
+          credits_consumed = data["data"]["credits_consumed"].toString();
+          last_balance_added = data["data"]["last_balance_added"].toString();
+          minimum_credit = data["data"]["minimum_credit"].toString();
         });
       } else {
         setState(() {
           _isLoading = false;
           tokenEmpty = true;
-          responseMessage = data["response"].toString();
+          responseMessage = data["data"]["response"].toString();
           tokenController.clear();
         });
         GetSetStorage.setAPI("");
@@ -380,9 +385,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                         child:
                                                                             Text(
                                                                           responseMessage,
-                                                                          style:GoogleFonts.comfortaa(
-                                                                      textStyle: 
-                                                                              const TextStyle(color: Colors.redAccent),),
+                                                                          style:
+                                                                              GoogleFonts.comfortaa(
+                                                                            textStyle:
+                                                                                const TextStyle(color: Colors.redAccent),
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                 const SizedBox(
@@ -522,17 +529,18 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
-                                                                  style: GoogleFonts.comfortaa(
-                                                                      textStyle: const TextStyle(
-                                                                      fontFamily:
-                                                                          "Sofia_pro",
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontSize:
-                                                                          20,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w600),),
+                                                                  style: GoogleFonts
+                                                                      .comfortaa(
+                                                                    textStyle: const TextStyle(
+                                                                        fontFamily:
+                                                                            "Sofia_pro",
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontSize:
+                                                                            20,
+                                                                        fontWeight:
+                                                                            FontWeight.w600),
+                                                                  ),
                                                                 ),
                                                                 const SizedBox(
                                                                   height: 15,
@@ -542,38 +550,39 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
-                                                                  style:GoogleFonts.comfortaa(
-                                                                      textStyle:  const TextStyle(
-                                                                      fontFamily:
-                                                                          "Sofia_pro",
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontSize:
-                                                                          14,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w400),),
+                                                                  style: GoogleFonts
+                                                                      .comfortaa(
+                                                                    textStyle: const TextStyle(
+                                                                        fontFamily:
+                                                                            "Sofia_pro",
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontSize:
+                                                                            14,
+                                                                        fontWeight:
+                                                                            FontWeight.w400),
+                                                                  ),
                                                                 ),
                                                                 const SizedBox(
                                                                   height: 5,
                                                                 ),
                                                                 Text(
-                                                                  "last balance added : $last_balance_added",
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  style:GoogleFonts.comfortaa(
-                                                                      textStyle:  const TextStyle(
-                                                                      fontFamily:
-                                                                          "Sofia_pro",
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontSize:
-                                                                          14,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w400),)
-                                                                ),
+                                                                    "last balance added : $last_balance_added",
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    style: GoogleFonts
+                                                                        .comfortaa(
+                                                                      textStyle: const TextStyle(
+                                                                          fontFamily:
+                                                                              "Sofia_pro",
+                                                                          color: Colors
+                                                                              .black,
+                                                                          fontSize:
+                                                                              14,
+                                                                          fontWeight:
+                                                                              FontWeight.w400),
+                                                                    )),
                                                                 const SizedBox(
                                                                   height: 5,
                                                                 ),
@@ -582,17 +591,18 @@ class _ProfilePageState extends State<ProfilePage> {
                                                                   textAlign:
                                                                       TextAlign
                                                                           .center,
-                                                                  style: GoogleFonts.comfortaa(
-                                                                      textStyle: const TextStyle(
-                                                                      fontFamily:
-                                                                          "Sofia_pro",
-                                                                      color: Colors
-                                                                          .black,
-                                                                      fontSize:
-                                                                          14,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .w400),),
+                                                                  style: GoogleFonts
+                                                                      .comfortaa(
+                                                                    textStyle: const TextStyle(
+                                                                        fontFamily:
+                                                                            "Sofia_pro",
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontSize:
+                                                                            14,
+                                                                        fontWeight:
+                                                                            FontWeight.w400),
+                                                                  ),
                                                                 ),
                                                                 const SizedBox(
                                                                   height: 25,
@@ -684,7 +694,8 @@ class _ProfilePageState extends State<ProfilePage> {
             top: 50,
             child: IconButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                // Navigator.of(context).pop();
+                Navigator.pop(context);
               },
               icon: const Icon(
                 Icons.arrow_back_ios,

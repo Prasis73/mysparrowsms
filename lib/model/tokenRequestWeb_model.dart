@@ -1,20 +1,23 @@
 // ignore_for_file: file_names
 
-import 'package:universal_io/io.dart';
 
-class TokenRequestModal {
+class TokenRequestModalWeb {
   String? name;
   String? phone;
   String? email;
   String? companyName;
   String? websiteApplication;
   String? requirement;
-  File? citizenImageFront;
-  File? citizenImageBack;
-  File? companyRegistration;
-  File? companyPanVat;
+  List<int>? citizenImageFront;
+  List<int>? citizenImageBack;
+  List<int>? companyRegistration;
+  List<int>? companyPanVat;
+  String? citizenImageFrontExt;
+  String? citizenImageBackExt;
+  String? companyRegistrationExt;
+  String? companyPanVatExt;
 
-  TokenRequestModal({
+  TokenRequestModalWeb({
     this.name,
     this.phone,
     this.email,
@@ -25,10 +28,14 @@ class TokenRequestModal {
     this.citizenImageBack,
     this.companyRegistration,
     this.companyPanVat,
+    this.citizenImageFrontExt,
+    this.citizenImageBackExt,
+    this.companyRegistrationExt,
+    this.companyPanVatExt,
   });
 
-  factory TokenRequestModal.fromMap(Map<String, dynamic> map) {
-    return TokenRequestModal(
+  factory TokenRequestModalWeb.fromMap(Map<String, dynamic> map) {
+    return TokenRequestModalWeb(
       name: map["name"],
       phone: map["phone"],
       email: map["email"],
@@ -39,6 +46,10 @@ class TokenRequestModal {
       citizenImageBack: map["citizenImageBack"],
       companyRegistration: map["companyRegistration"],
       companyPanVat: map["companyPanVat"],
+      citizenImageFrontExt: map["citizenImageFrontExt"],
+      citizenImageBackExt: map["citizenImageBackExt"],
+      companyRegistrationExt: map["companyRegistrationExt"],
+      companyPanVatExt: map["companyPanVatExt"],
     );
   }
 
@@ -54,6 +65,10 @@ class TokenRequestModal {
       "citizenImageBack": citizenImageBack,
       "companyRegistration": companyRegistration,
       "companyPanVat": companyPanVat,
+      "citizenImageFrontExt": citizenImageFrontExt,
+      "citizenImageBackExt": citizenImageBackExt,
+      "companyRegistrationExt": companyRegistrationExt,
+      "companyPanVatExt": companyPanVatExt,
     };
   }
 }
