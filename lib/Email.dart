@@ -895,8 +895,6 @@ class _EmailScreenState extends State<EmailScreen> {
                                                       },
                                                       style: const TextStyle(
                                                           color: Colors.black),
-                                                      keyboardType:
-                                                          TextInputType.phone,
                                                       decoration:
                                                           const InputDecoration(
                                                         enabledBorder:
@@ -943,8 +941,6 @@ class _EmailScreenState extends State<EmailScreen> {
                                                       },
                                                       style: const TextStyle(
                                                           color: Colors.black),
-                                                      keyboardType:
-                                                          TextInputType.phone,
                                                       decoration:
                                                           const InputDecoration(
                                                         enabledBorder:
